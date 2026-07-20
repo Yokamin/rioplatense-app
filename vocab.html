@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vocabulary Recall · Rioplatense</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header>
+        <p class="back-link"><a href="index.html">← Home</a></p>
+        <h1>Vocabulary Recall</h1>
+      </header>
+
+      <div id="settings-overlay" class="settings-overlay">
+        <section class="settings-dialog" aria-labelledby="vocab-settings-title">
+          <h2 id="vocab-settings-title">Session settings</h2>
+          <p class="field-hint">Choose categories, then start. Settings are remembered next time.</p>
+
+          <fieldset class="fieldset">
+            <legend>Practice style</legend>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="input-mode" value="type" checked />
+                Type answers (recommended)
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="input-mode" value="reveal" />
+                Reveal only (no typing, no stats)
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset class="fieldset">
+            <legend>Categories</legend>
+            <p class="field-hint">Only categories with at least one word appear here.</p>
+            <div id="category-filters" class="checkbox-grid"></div>
+          </fieldset>
+
+          <button type="button" id="start-practice" class="primary-action">Start practice</button>
+        </section>
+      </div>
+
+      <div id="drill-session" hidden>
+        <div id="session-bar" class="session-bar">
+          <button type="button" id="stats-toggle" class="stats-chip" aria-haspopup="dialog"></button>
+          <button type="button" id="change-settings" class="secondary-action">Change settings</button>
+        </div>
+
+        <p id="dialect-warning" class="dialect-warning" hidden></p>
+        <section id="card" class="card" aria-live="polite"></section>
+        <p id="meta" class="meta"></p>
+
+        <form id="answer-form" class="answer-form">
+          <label for="answer-input">Your answer</label>
+          <input id="answer-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" />
+        </form>
+
+        <p id="answer-feedback" class="answer-feedback" hidden aria-live="polite"></p>
+
+        <div class="drill-actions">
+          <button type="button" id="primary-action" class="primary-action" data-action="check">Check</button>
+          <div id="secondary-actions" class="secondary-actions">
+            <button type="button" id="reveal-answer" class="secondary-action">Reveal Answer</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="stats-modal" class="modal-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="stats-modal-title">
+        <section class="modal-dialog">
+          <div id="stats-modal-body"></div>
+          <button type="button" id="stats-modal-close" class="primary-action">Close</button>
+        </section>
+      </div>
+    </main>
+
+    <script type="module" src="src/vocab.js"></script>
+  </body>
+</html>

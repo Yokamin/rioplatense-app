@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verb Lookup · Rioplatense</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <main class="app app-wide">
+      <header>
+        <p class="back-link"><a href="index.html">← Home</a></p>
+        <h1>Verb Lookup</h1>
+        <p class="subtitle">Browse conjugation tables and verb types</p>
+      </header>
+
+      <div class="field">
+        <label for="verb-search">Search</label>
+        <input
+          id="verb-search"
+          type="search"
+          placeholder="Search by infinitive or English…"
+          autocomplete="off"
+          autocapitalize="off"
+          spellcheck="false"
+        />
+      </div>
+
+      <p id="verb-list-status" class="field-hint" aria-live="polite"></p>
+      <div id="verb-list" class="verb-list"></div>
+
+      <div
+        id="verb-detail-modal"
+        class="modal-overlay"
+        hidden
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="verb-detail-title"
+      >
+        <section class="modal-dialog modal-dialog-wide">
+          <div id="verb-detail-body"></div>
+          <button type="button" id="verb-detail-close" class="primary-action">Close</button>
+        </section>
+      </div>
+    </main>
+
+    <script type="module" src="src/verbs.js"></script>
+  </body>
+</html>

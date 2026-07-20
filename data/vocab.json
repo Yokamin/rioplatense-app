@@ -1,0 +1,40 @@
+{
+  "categories": [
+    {
+      "id": "days_of_week",
+      "display_name": "Days of the Week",
+      "items": {
+        "lunes": "Monday",
+        "martes": "Tuesday",
+        "miércoles": "Wednesday",
+        "jueves": "Thursday",
+        "viernes": "Friday",
+        "sábado": "Saturday",
+        "domingo": "Sunday"
+      }
+    },
+    {
+      "id": "months_of_year",
+      "display_name": "Months of the Year",
+      "items": {
+        "enero": "January",
+        "febrero": "February",
+        "marzo": "March",
+        "abril": "April",
+        "mayo": "May",
+        "junio": "June",
+        "julio": "July",
+        "agosto": "August",
+        "septiembre": "September",
+        "octubre": "October",
+        "noviembre": "November",
+        "diciembre": "December"
+      }
+    },
+    {
+      "id": "general",
+      "display_name": "General Words",
+      "items": {}
+    }
+  ]
+}

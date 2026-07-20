@@ -1,0 +1,946 @@
+[
+  {
+    "is_reflexive": false,
+    "infinitive": "abrir",
+    "english": "to open",
+    "type": "regular_ir",
+    "present_tense": {
+      "yo": "abro",
+      "vos": "abrís",
+      "tu": "abres",
+      "el": "abre",
+      "nosotros": "abrimos",
+      "vosotros": "abrís",
+      "ustedes": "abren"
+    },
+    "frequency": "common"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "aprender",
+    "english": "to learn",
+    "type": "regular_er",
+    "present_tense": {
+      "yo": "aprendo",
+      "vos": "aprendés",
+      "tu": "aprendes",
+      "el": "aprende",
+      "nosotros": "aprendemos",
+      "vosotros": "aprendéis",
+      "ustedes": "aprenden"
+    },
+    "frequency": "common"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "bailar",
+    "english": "to dance",
+    "type": "regular_ar",
+    "present_tense": {
+      "yo": "bailo",
+      "vos": "bailás",
+      "tu": "bailas",
+      "el": "baila",
+      "nosotros": "bailamos",
+      "vosotros": "bailáis",
+      "ustedes": "bailan"
+    },
+    "frequency": "extended"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "beber",
+    "english": "to drink",
+    "type": "regular_er",
+    "present_tense": {
+      "yo": "bebo",
+      "vos": "bebés",
+      "tu": "bebes",
+      "el": "bebe",
+      "nosotros": "bebemos",
+      "vosotros": "bebéis",
+      "ustedes": "beben"
+    },
+    "frequency": "common"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "caminar",
+    "english": "to walk",
+    "type": "regular_ar",
+    "present_tense": {
+      "yo": "camino",
+      "vos": "caminás",
+      "tu": "caminas",
+      "el": "camina",
+      "nosotros": "caminamos",
+      "vosotros": "camináis",
+      "ustedes": "caminan"
+    },
+    "frequency": "extended"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "cantar",
+    "english": "to sing",
+    "type": "regular_ar",
+    "present_tense": {
+      "yo": "canto",
+      "vos": "cantás",
+      "tu": "cantas",
+      "el": "canta",
+      "nosotros": "cantamos",
+      "vosotros": "cantáis",
+      "ustedes": "cantan"
+    },
+    "frequency": "extended"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "cocinar",
+    "english": "to cook",
+    "type": "regular_ar",
+    "present_tense": {
+      "yo": "cocino",
+      "vos": "cocinás",
+      "tu": "cocinas",
+      "el": "cocina",
+      "nosotros": "cocinamos",
+      "vosotros": "cocináis",
+      "ustedes": "cocinan"
+    },
+    "frequency": "extended"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "comer",
+    "english": "to eat",
+    "type": "regular_er",
+    "present_tense": {
+      "yo": "como",
+      "vos": "comés",
+      "tu": "comes",
+      "el": "come",
+      "nosotros": "comemos",
+      "vosotros": "coméis",
+      "ustedes": "comen"
+    },
+    "frequency": "common"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "compartir",
+    "english": "to share",
+    "type": "regular_ir",
+    "present_tense": {
+      "yo": "comparto",
+      "vos": "compartís",
+      "tu": "compartes",
+      "el": "comparte",
+      "nosotros": "compartimos",
+      "vosotros": "compartís",
+      "ustedes": "comparten"
+    },
+    "frequency": "extended"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "comprar",
+    "english": "to buy",
+    "type": "regular_ar",
+    "present_tense": {
+      "yo": "compro",
+      "vos": "comprás",
+      "tu": "compras",
+      "el": "compra",
+      "nosotros": "compramos",
+      "vosotros": "compráis",
+      "ustedes": "compran"
+    },
+    "frequency": "common"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "comprender",
+    "english": "to understand",
+    "type": "regular_er",
+    "present_tense": {
+      "yo": "comprendo",
+      "vos": "comprendés",
+      "tu": "comprendes",
+      "el": "comprende",
+      "nosotros": "comprendemos",
+      "vosotros": "comprendéis",
+      "ustedes": "comprenden"
+    },
+    "frequency": "common"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "conocer",
+    "english": "to know (someone/something)",
+    "type": "irregular",
+    "present_tense": {
+      "yo": "conozco",
+      "vos": "conocés",
+      "tu": "conoces",
+      "el": "conoce",
+      "nosotros": "conocemos",
+      "vosotros": "conocéis",
+      "ustedes": "conocen"
+    },
+    "frequency": "common"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "correr",
+    "english": "to run",
+    "type": "regular_er",
+    "present_tense": {
+      "yo": "corro",
+      "vos": "corrés",
+      "tu": "corres",
+      "el": "corre",
+      "nosotros": "corremos",
+      "vosotros": "corréis",
+      "ustedes": "corren"
+    },
+    "frequency": "extended"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "creer",
+    "english": "to believe",
+    "type": "regular_er",
+    "present_tense": {
+      "yo": "creo",
+      "vos": "creés",
+      "tu": "crees",
+      "el": "cree",
+      "nosotros": "creemos",
+      "vosotros": "creéis",
+      "ustedes": "creen"
+    },
+    "frequency": "common"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "dar",
+    "english": "to give",
+    "type": "irregular",
+    "present_tense": {
+      "yo": "doy",
+      "vos": "das",
+      "tu": "das",
+      "el": "da",
+      "nosotros": "damos",
+      "vosotros": "dais",
+      "ustedes": "dan"
+    },
+    "frequency": "core"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "deber",
+    "english": "to must / to owe",
+    "type": "regular_er",
+    "present_tense": {
+      "yo": "debo",
+      "vos": "debés",
+      "tu": "debes",
+      "el": "debe",
+      "nosotros": "debemos",
+      "vosotros": "debéis",
+      "ustedes": "deben"
+    },
+    "frequency": "common"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "decidir",
+    "english": "to decide",
+    "type": "regular_ir",
+    "present_tense": {
+      "yo": "decido",
+      "vos": "decidís",
+      "tu": "decides",
+      "el": "decide",
+      "nosotros": "decidimos",
+      "vosotros": "decidís",
+      "ustedes": "deciden"
+    },
+    "frequency": "extended"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "decir",
+    "english": "to say / to tell",
+    "type": "irregular",
+    "present_tense": {
+      "yo": "digo",
+      "vos": "decís",
+      "tu": "dices",
+      "el": "dice",
+      "nosotros": "decimos",
+      "vosotros": "decís",
+      "ustedes": "dicen"
+    },
+    "frequency": "core"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "dejar",
+    "english": "to leave (something) / to let",
+    "type": "regular_ar",
+    "present_tense": {
+      "yo": "dejo",
+      "vos": "dejás",
+      "tu": "dejas",
+      "el": "deja",
+      "nosotros": "dejamos",
+      "vosotros": "dejáis",
+      "ustedes": "dejan"
+    },
+    "frequency": "common"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "descubrir",
+    "english": "to discover",
+    "type": "regular_ir",
+    "present_tense": {
+      "yo": "descubro",
+      "vos": "descubrís",
+      "tu": "descubres",
+      "el": "descubre",
+      "nosotros": "descubrimos",
+      "vosotros": "descubrís",
+      "ustedes": "descubren"
+    },
+    "frequency": "extended"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "entender",
+    "english": "to understand",
+    "type": "stem_changer_e_ie",
+    "present_tense": {
+      "yo": "entiendo",
+      "vos": "entendés",
+      "tu": "entiendes",
+      "el": "entiende",
+      "nosotros": "entendemos",
+      "vosotros": "entendéis",
+      "ustedes": "entienden"
+    },
+    "frequency": "common"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "escribir",
+    "english": "to write",
+    "type": "regular_ir",
+    "present_tense": {
+      "yo": "escribo",
+      "vos": "escribís",
+      "tu": "escribes",
+      "el": "escribe",
+      "nosotros": "escribimos",
+      "vosotros": "escribís",
+      "ustedes": "escriben"
+    },
+    "frequency": "common"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "estar",
+    "english": "to be (state / location)",
+    "type": "irregular",
+    "present_tense": {
+      "yo": "estoy",
+      "vos": "estás",
+      "tu": "estás",
+      "el": "está",
+      "nosotros": "estamos",
+      "vosotros": "estáis",
+      "ustedes": "están"
+    },
+    "frequency": "core"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "estudiar",
+    "english": "to study",
+    "type": "regular_ar",
+    "present_tense": {
+      "yo": "estudio",
+      "vos": "estudiás",
+      "tu": "estudias",
+      "el": "estudia",
+      "nosotros": "estudiamos",
+      "vosotros": "estudiáis",
+      "ustedes": "estudian"
+    },
+    "frequency": "common"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "existir",
+    "english": "to exist",
+    "type": "regular_ir",
+    "present_tense": {
+      "yo": "existo",
+      "vos": "existís",
+      "tu": "existes",
+      "el": "existe",
+      "nosotros": "existimos",
+      "vosotros": "existís",
+      "ustedes": "existen"
+    },
+    "frequency": "extended"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "haber",
+    "english": "to have (auxiliary; there is/are)",
+    "type": "irregular",
+    "present_tense": {
+      "yo": "he",
+      "vos": "has",
+      "tu": "has",
+      "el": "ha",
+      "nosotros": "hemos",
+      "vosotros": "habéis",
+      "ustedes": "han"
+    },
+    "frequency": "core"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "hablar",
+    "english": "to speak / to talk",
+    "type": "regular_ar",
+    "present_tense": {
+      "yo": "hablo",
+      "vos": "hablás",
+      "tu": "hablas",
+      "el": "habla",
+      "nosotros": "hablamos",
+      "vosotros": "habláis",
+      "ustedes": "hablan"
+    },
+    "frequency": "common"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "hacer",
+    "english": "to do / to make",
+    "type": "irregular",
+    "present_tense": {
+      "yo": "hago",
+      "vos": "hacés",
+      "tu": "haces",
+      "el": "hace",
+      "nosotros": "hacemos",
+      "vosotros": "hacéis",
+      "ustedes": "hacen"
+    },
+    "frequency": "core"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "ir",
+    "english": "to go",
+    "type": "irregular",
+    "present_tense": {
+      "yo": "voy",
+      "vos": "vas",
+      "tu": "vas",
+      "el": "va",
+      "nosotros": "vamos",
+      "vosotros": "vais",
+      "ustedes": "van"
+    },
+    "frequency": "core"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "leer",
+    "english": "to read",
+    "type": "regular_er",
+    "present_tense": {
+      "yo": "leo",
+      "vos": "leés",
+      "tu": "lees",
+      "el": "lee",
+      "nosotros": "leemos",
+      "vosotros": "leéis",
+      "ustedes": "leen"
+    },
+    "frequency": "common"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "limpiar",
+    "english": "to clean",
+    "type": "regular_ar",
+    "present_tense": {
+      "yo": "limpio",
+      "vos": "limpiás",
+      "tu": "limpias",
+      "el": "limpia",
+      "nosotros": "limpiamos",
+      "vosotros": "limpiáis",
+      "ustedes": "limpian"
+    },
+    "frequency": "extended"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "necesitar",
+    "english": "to need",
+    "type": "regular_ar",
+    "present_tense": {
+      "yo": "necesito",
+      "vos": "necesitás",
+      "tu": "necesitas",
+      "el": "necesita",
+      "nosotros": "necesitamos",
+      "vosotros": "necesitáis",
+      "ustedes": "necesitan"
+    },
+    "frequency": "common"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "oír",
+    "english": "to hear",
+    "type": "irregular",
+    "present_tense": {
+      "yo": "oigo",
+      "vos": "oís",
+      "tu": "oyes",
+      "el": "oye",
+      "nosotros": "oimos",
+      "vosotros": "oís",
+      "ustedes": "oyen"
+    },
+    "frequency": "core"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "pasar",
+    "english": "to pass / to spend (time)",
+    "type": "regular_ar",
+    "present_tense": {
+      "yo": "paso",
+      "vos": "pasás",
+      "tu": "pasas",
+      "el": "pasa",
+      "nosotros": "pasamos",
+      "vosotros": "pasáis",
+      "ustedes": "pasan"
+    },
+    "frequency": "common"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "pedir",
+    "english": "to ask for / to order",
+    "type": "stem_changer_e_i",
+    "present_tense": {
+      "yo": "pido",
+      "vos": "pedís",
+      "tu": "pides",
+      "el": "pide",
+      "nosotros": "pedimos",
+      "vosotros": "pedís",
+      "ustedes": "piden"
+    },
+    "frequency": "core"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "pensar",
+    "english": "to think",
+    "type": "stem_changer_e_ie",
+    "present_tense": {
+      "yo": "pienso",
+      "vos": "pensás",
+      "tu": "piensas",
+      "el": "piensa",
+      "nosotros": "pensamos",
+      "vosotros": "pensáis",
+      "ustedes": "piensan"
+    },
+    "frequency": "common"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "permitir",
+    "english": "to allow",
+    "type": "regular_ir",
+    "present_tense": {
+      "yo": "permito",
+      "vos": "permitís",
+      "tu": "permites",
+      "el": "permite",
+      "nosotros": "permitimos",
+      "vosotros": "permitís",
+      "ustedes": "permiten"
+    },
+    "frequency": "extended"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "poder",
+    "english": "to be able to / can",
+    "type": "stem_changer_o_ue",
+    "present_tense": {
+      "yo": "puedo",
+      "vos": "podés",
+      "tu": "puedes",
+      "el": "puede",
+      "nosotros": "podemos",
+      "vosotros": "podéis",
+      "ustedes": "pueden"
+    },
+    "frequency": "core"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "poner",
+    "english": "to put / to place",
+    "type": "irregular",
+    "present_tense": {
+      "yo": "pongo",
+      "vos": "ponés",
+      "tu": "pones",
+      "el": "pone",
+      "nosotros": "ponemos",
+      "vosotros": "ponéis",
+      "ustedes": "ponen"
+    },
+    "frequency": "core"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "querer",
+    "english": "to want / to love",
+    "type": "stem_changer_e_ie",
+    "present_tense": {
+      "yo": "quiero",
+      "vos": "querés",
+      "tu": "quieres",
+      "el": "quiere",
+      "nosotros": "queremos",
+      "vosotros": "queréis",
+      "ustedes": "quieren"
+    },
+    "frequency": "core"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "recibir",
+    "english": "to receive",
+    "type": "regular_ir",
+    "present_tense": {
+      "yo": "recibo",
+      "vos": "recibís",
+      "tu": "recibes",
+      "el": "recibe",
+      "nosotros": "recibimos",
+      "vosotros": "recibís",
+      "ustedes": "reciben"
+    },
+    "frequency": "common"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "responder",
+    "english": "to answer",
+    "type": "regular_er",
+    "present_tense": {
+      "yo": "respondo",
+      "vos": "respondés",
+      "tu": "respondes",
+      "el": "responde",
+      "nosotros": "respondemos",
+      "vosotros": "respondéis",
+      "ustedes": "responden"
+    },
+    "frequency": "common"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "romper",
+    "english": "to break",
+    "type": "regular_er",
+    "present_tense": {
+      "yo": "rompo",
+      "vos": "rompés",
+      "tu": "rompes",
+      "el": "rompe",
+      "nosotros": "rompemos",
+      "vosotros": "rompéis",
+      "ustedes": "rompen"
+    },
+    "frequency": "extended"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "saber",
+    "english": "to know (a fact / how to)",
+    "type": "irregular",
+    "present_tense": {
+      "yo": "sé",
+      "vos": "sabés",
+      "tu": "sabes",
+      "el": "sabe",
+      "nosotros": "sabemos",
+      "vosotros": "sabéis",
+      "ustedes": "saben"
+    },
+    "frequency": "core"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "salir",
+    "english": "to leave / to go out",
+    "type": "irregular",
+    "present_tense": {
+      "yo": "salgo",
+      "vos": "salís",
+      "tu": "sales",
+      "el": "sale",
+      "nosotros": "salimos",
+      "vosotros": "salís",
+      "ustedes": "salen"
+    },
+    "frequency": "common"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "seguir",
+    "english": "to follow / to continue",
+    "type": "stem_changer_e_i",
+    "present_tense": {
+      "yo": "sigo",
+      "vos": "seguís",
+      "tu": "sigues",
+      "el": "sigue",
+      "nosotros": "seguimos",
+      "vosotros": "seguís",
+      "ustedes": "siguen"
+    },
+    "frequency": "core"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "sentir",
+    "english": "to feel",
+    "type": "stem_changer_e_ie",
+    "present_tense": {
+      "yo": "siento",
+      "vos": "sentís",
+      "tu": "sientes",
+      "el": "siente",
+      "nosotros": "sentimos",
+      "vosotros": "sentís",
+      "ustedes": "sienten"
+    },
+    "frequency": "common"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "ser",
+    "english": "to be (essential / identity)",
+    "type": "irregular",
+    "present_tense": {
+      "yo": "soy",
+      "vos": "sos",
+      "tu": "eres",
+      "el": "es",
+      "nosotros": "somos",
+      "vosotros": "sois",
+      "ustedes": "son"
+    },
+    "frequency": "core"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "subir",
+    "english": "to go up",
+    "type": "regular_ir",
+    "present_tense": {
+      "yo": "subo",
+      "vos": "subís",
+      "tu": "subes",
+      "el": "sube",
+      "nosotros": "subimos",
+      "vosotros": "subís",
+      "ustedes": "suben"
+    },
+    "frequency": "extended"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "tener",
+    "english": "to have",
+    "type": "stem_changer_e_ie",
+    "present_tense": {
+      "yo": "tengo",
+      "vos": "tenés",
+      "tu": "tienes",
+      "el": "tiene",
+      "nosotros": "tenemos",
+      "vosotros": "tenéis",
+      "ustedes": "tienen"
+    },
+    "frequency": "core"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "tomar",
+    "english": "to take / to drink",
+    "type": "regular_ar",
+    "present_tense": {
+      "yo": "tomo",
+      "vos": "tomás",
+      "tu": "tomas",
+      "el": "toma",
+      "nosotros": "tomamos",
+      "vosotros": "tomáis",
+      "ustedes": "toman"
+    },
+    "frequency": "common"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "trabajar",
+    "english": "to work",
+    "type": "regular_ar",
+    "present_tense": {
+      "yo": "trabajo",
+      "vos": "trabajás",
+      "tu": "trabajas",
+      "el": "trabaja",
+      "nosotros": "trabajamos",
+      "vosotros": "trabajáis",
+      "ustedes": "trabajan"
+    },
+    "frequency": "common"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "traer",
+    "english": "to bring",
+    "type": "irregular",
+    "present_tense": {
+      "yo": "traigo",
+      "vos": "traés",
+      "tu": "traes",
+      "el": "trae",
+      "nosotros": "traemos",
+      "vosotros": "traéis",
+      "ustedes": "traen"
+    },
+    "frequency": "common"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "vender",
+    "english": "to sell",
+    "type": "regular_er",
+    "present_tense": {
+      "yo": "vendo",
+      "vos": "vendés",
+      "tu": "vendes",
+      "el": "vende",
+      "nosotros": "vendemos",
+      "vosotros": "vendéis",
+      "ustedes": "venden"
+    },
+    "frequency": "extended"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "venir",
+    "english": "to come",
+    "type": "irregular",
+    "present_tense": {
+      "yo": "vengo",
+      "vos": "venís",
+      "tu": "vienes",
+      "el": "viene",
+      "nosotros": "venimos",
+      "vosotros": "venís",
+      "ustedes": "vienen"
+    },
+    "frequency": "core"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "ver",
+    "english": "to see",
+    "type": "irregular",
+    "present_tense": {
+      "yo": "veo",
+      "vos": "ves",
+      "tu": "ves",
+      "el": "ve",
+      "nosotros": "vemos",
+      "vosotros": "veis",
+      "ustedes": "ven"
+    },
+    "frequency": "core"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "viajar",
+    "english": "to travel",
+    "type": "regular_ar",
+    "present_tense": {
+      "yo": "viajo",
+      "vos": "viajás",
+      "tu": "viajas",
+      "el": "viaja",
+      "nosotros": "viajamos",
+      "vosotros": "viajáis",
+      "ustedes": "viajan"
+    },
+    "frequency": "extended"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "vivir",
+    "english": "to live",
+    "type": "regular_ir",
+    "present_tense": {
+      "yo": "vivo",
+      "vos": "vivís",
+      "tu": "vives",
+      "el": "vive",
+      "nosotros": "vivimos",
+      "vosotros": "vivís",
+      "ustedes": "viven"
+    },
+    "frequency": "common"
+  },
+  {
+    "is_reflexive": false,
+    "infinitive": "volver",
+    "english": "to return / to come back",
+    "type": "stem_changer_o_ue",
+    "present_tense": {
+      "yo": "vuelvo",
+      "vos": "volvés",
+      "tu": "vuelves",
+      "el": "vuelve",
+      "nosotros": "volvemos",
+      "vosotros": "volvéis",
+      "ustedes": "vuelven"
+    },
+    "frequency": "common"
+  }
+]

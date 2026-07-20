@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Card Creator · Rioplatense</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <main class="app app-wide">
+      <header>
+        <p class="back-link"><a href="index.html">← Home</a></p>
+        <h1>Card Creator</h1>
+        <p class="subtitle">Add draft cards locally, then export JSON into your data files</p>
+      </header>
+
+      <p id="status" class="status" aria-live="polite">Loading data…</p>
+
+      <section class="panel">
+        <h2 class="panel-title">Draft summary</h2>
+        <p id="draft-summary" class="field-hint"></p>
+        <button type="button" id="clear-drafts" class="secondary-action">Clear local drafts</button>
+      </section>
+
+      <div class="creator-grid">
+        <section class="panel">
+          <h2 class="panel-title">Add vocabulary word</h2>
+          <form id="add-vocab-form" class="stack-form">
+            <div class="field">
+              <label for="vocab-spanish">Spanish</label>
+              <input id="vocab-spanish" name="spanish" required autocomplete="off" />
+            </div>
+            <div class="field">
+              <label for="vocab-english">English</label>
+              <input id="vocab-english" name="english" required autocomplete="off" />
+            </div>
+            <div class="field">
+              <label for="vocab-category">Category</label>
+              <select id="vocab-category" name="categoryId" required></select>
+            </div>
+            <button type="submit" class="primary-action">Save vocabulary draft</button>
+          </form>
+        </section>
+
+        <section class="panel">
+          <h2 class="panel-title">Add new category</h2>
+          <form id="add-category-form" class="stack-form">
+            <div class="field">
+              <label for="category-name">Display name</label>
+              <input id="category-name" name="displayName" placeholder="Animals" required autocomplete="off" />
+            </div>
+            <div class="field">
+              <label for="category-id">Id (optional slug)</label>
+              <input id="category-id" name="categoryId" placeholder="animals" autocomplete="off" />
+            </div>
+            <button type="submit" class="secondary-action">Add category draft</button>
+          </form>
+        </section>
+
+        <section class="panel panel-wide">
+          <h2 class="panel-title">Add verb</h2>
+          <p class="field-hint">You can save with metadata only. Conjugations are optional — incomplete verbs won't appear in drills.</p>
+          <form id="add-verb-form" class="stack-form">
+            <div class="creator-row">
+              <div class="field">
+                <label for="verb-infinitive">Infinitive</label>
+                <input id="verb-infinitive" name="infinitive" required autocomplete="off" />
+              </div>
+              <div class="field">
+                <label for="verb-english">English</label>
+                <input id="verb-english" name="english" required autocomplete="off" />
+              </div>
+            </div>
+            <div class="creator-row">
+              <div class="field">
+                <label for="verb-type">Type</label>
+                <select id="verb-type" name="type" required></select>
+              </div>
+              <div class="field">
+                <label for="verb-reflexive">Reflexive</label>
+                <select id="verb-reflexive" name="isReflexive">
+                  <option value="false">No</option>
+                  <option value="true">Yes</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label for="verb-note">Note (optional)</label>
+              <input id="verb-note" name="note" autocomplete="off" />
+            </div>
+
+            <details class="conjugation-details">
+              <summary>Add present tense conjugations now (optional)</summary>
+              <div id="conjugation-fields" class="conjugation-grid"></div>
+            </details>
+
+            <button type="submit" class="primary-action">Save verb draft</button>
+          </form>
+        </section>
+
+        <section class="panel panel-wide">
+          <h2 class="panel-title">Export merged JSON</h2>
+          <p class="field-hint">Copy each block into <code>data/vocab.json</code> and <code>data/verbs.json</code>, then commit via Git.</p>
+          <div class="export-block">
+            <div class="export-header">
+              <h3>vocab.json</h3>
+              <button type="button" id="copy-vocab" class="secondary-action">Copy</button>
+            </div>
+            <textarea id="export-vocab" readonly rows="10"></textarea>
+          </div>
+          <div class="export-block">
+            <div class="export-header">
+              <h3>verbs.json</h3>
+              <button type="button" id="copy-verbs" class="secondary-action">Copy</button>
+            </div>
+            <textarea id="export-verbs" readonly rows="10"></textarea>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script type="module" src="src/card-creator.js"></script>
+  </body>
+</html>

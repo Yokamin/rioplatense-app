@@ -1,0 +1,804 @@
+/* Rioplatense Practice App — mobile-first base styles */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  line-height: 1.5;
+  color: #1a1a1a;
+  background: #f6f7fb;
+}
+
+.app {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 1.25rem;
+}
+
+.app-wide {
+  max-width: 52rem;
+}
+
+header h1 {
+  margin: 0 0 0.25rem;
+  font-size: 1.5rem;
+}
+
+.subtitle {
+  margin: 0;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.back-link {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+}
+
+.back-link a {
+  color: #1f6feb;
+  text-decoration: none;
+}
+
+.mode-nav {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.mode-card {
+  display: block;
+  padding: 1rem 1.1rem;
+  border: 1px solid #dde1e8;
+  border-radius: 0.75rem;
+  background: #fff;
+  color: inherit;
+  text-decoration: none;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 6%);
+}
+
+.mode-card h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1.1rem;
+}
+
+.mode-card p {
+  margin: 0;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.status {
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  background: #e8f4ea;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.status.error {
+  background: #fdecea;
+  color: #8a1f11;
+}
+
+.settings-overlay {
+  margin-top: 1rem;
+}
+
+.settings-dialog {
+  padding: 1rem;
+  background: #fff;
+  border: 1px solid #dde1e8;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 8%);
+}
+
+.settings-dialog h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1.1rem;
+}
+
+.settings-summary {
+  margin: 0.75rem 0 1rem;
+  padding: 0.65rem 0.85rem;
+  background: #f3f6fb;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.session-bar {
+  display: grid;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.session-bar--review-only {
+  grid-template-columns: 1fr;
+}
+
+.drill-session--review-only .answer-form,
+.drill-session--review-only .secondary-actions,
+.drill-session--review-only .stats-chip {
+  display: none !important;
+}
+
+.stats-chip {
+  display: grid;
+  gap: 0.15rem;
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 2px solid #1f6feb;
+  border-radius: 0.75rem;
+  background: #eef3ff;
+  color: #1a1a1a;
+  text-align: left;
+}
+
+.stats-chip-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #1f6feb;
+}
+
+.stats-chip-values {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.stats-chip-hint {
+  font-size: 0.78rem;
+  color: #555;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgb(0 0 0 / 45%);
+}
+
+.modal-overlay[hidden] {
+  display: none;
+}
+
+.modal-dialog {
+  width: min(100%, 28rem);
+  max-height: min(90vh, 640px);
+  overflow: auto;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: #fff;
+  box-shadow: 0 8px 32px rgb(0 0 0 / 20%);
+}
+
+.modal-dialog-wide {
+  width: min(100%, 36rem);
+}
+
+.modal-dialog h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.15rem;
+}
+
+.modal-dialog h3 {
+  margin: 1rem 0 0.35rem;
+  font-size: 0.95rem;
+}
+
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.stats-table th,
+.stats-table td {
+  padding: 0.35rem 0.5rem;
+  border-bottom: 1px solid #e8ebf0;
+  text-align: left;
+}
+
+.stats-reset {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.picker-toggle {
+  width: 100%;
+  text-align: left;
+}
+
+.picker-toolbar {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.picker-toolbar .secondary-action {
+  padding-inline: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.picker-scroll {
+  max-height: 12rem;
+  overflow: auto;
+  padding-right: 0.25rem;
+}
+
+.verb-picker-list {
+  max-height: min(50vh, 24rem);
+  margin-bottom: 0.75rem;
+}
+
+.picker-tier-heading {
+  margin: 0.75rem 0 0.35rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #555;
+}
+
+.picker-tier-heading:first-child {
+  margin-top: 0;
+}
+
+.picker-tier-grid {
+  margin-bottom: 0.35rem;
+}
+
+.dialect-warning {
+  margin: 0 0 0.75rem;
+  padding: 0.65rem 0.85rem;
+  background: #fff8e6;
+  border: 1px solid #f0d58a;
+  border-radius: 0.5rem;
+  color: #6b4f00;
+  font-size: 0.88rem;
+}
+
+.compact-status {
+  margin: 0;
+}
+
+.answer-form {
+  display: grid;
+  gap: 0.5rem;
+  margin: 1rem 0 0.75rem;
+}
+
+.answer-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.answer-feedback {
+  margin: 0 0 0.75rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.answer-feedback.is-correct {
+  background: #e8f4ea;
+  color: #0b6e4f;
+}
+
+.answer-feedback.is-accent {
+  background: #fff8e6;
+  color: #7a5b00;
+}
+
+.answer-feedback.is-incorrect {
+  background: #fdecea;
+  color: #8a1f11;
+}
+
+.answer-feedback.is-revealed {
+  background: #eef3ff;
+  color: #1a1a1a;
+}
+
+.drill-actions {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.secondary-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+.verb-peek-trigger {
+  display: inline;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  cursor: default;
+}
+
+.verb-peek-trigger.is-unlocked {
+  color: #1f6feb;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.verb-peek-trigger.is-unlocked:hover {
+  color: #1158c7;
+}
+
+.verb-peek-trigger:disabled {
+  opacity: 1;
+}
+
+.verb-detail-english {
+  margin: 0 0 0.35rem;
+  color: #555;
+}
+
+.verb-detail-meta {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.verb-type-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.type-tag {
+  display: inline-block;
+  padding: 0.25rem 0.55rem;
+  border: 1px solid #c8ccd4;
+  border-radius: 999px;
+  background: #f3f6fb;
+  color: #1a1a1a;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+button.type-tag {
+  cursor: pointer;
+}
+
+.type-tag-compact {
+  font-size: 0.75rem;
+}
+
+.type-tag-group {
+  width: 100%;
+}
+
+.type-explain-panel {
+  width: 100%;
+  margin-top: 0.35rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 0.5rem;
+  background: #f8f9fc;
+  border: 1px solid #e5e8ee;
+}
+
+.type-explain-title {
+  margin: 0 0 0.35rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.type-explain-body {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #444;
+}
+
+.verb-detail-note {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.verb-tense-scroll {
+  max-height: min(50vh, 22rem);
+  overflow: auto;
+}
+
+.verb-tense-section h3 {
+  margin: 0.75rem 0 0.35rem;
+  font-size: 0.95rem;
+}
+
+.verb-tense-section:first-child h3 {
+  margin-top: 0;
+}
+
+.conj-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.conj-table th,
+.conj-table td {
+  padding: 0.4rem 0.5rem;
+  border-bottom: 1px solid #e8ebf0;
+  text-align: left;
+  font-weight: 400;
+}
+
+.conj-table th {
+  width: 42%;
+  color: #555;
+  font-weight: 600;
+}
+
+.conj-row-highlight {
+  background: #eef3ff;
+}
+
+.conj-row-highlight th,
+.conj-row-highlight td {
+  font-weight: 700;
+}
+
+.verb-list-tier {
+  margin: 1.25rem 0 0.5rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.verb-list-tier:first-child {
+  margin-top: 0;
+}
+
+.verb-list-grid {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.verb-list-item {
+  display: grid;
+  gap: 0.15rem;
+  width: 100%;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid #dde1e8;
+  border-radius: 0.65rem;
+  background: #fff;
+  color: inherit;
+  text-align: left;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 4%);
+}
+
+.verb-list-infinitive {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.verb-list-english {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.verb-list-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.25rem;
+}
+
+.verb-list-incomplete {
+  font-size: 0.75rem;
+  color: #7a5b00;
+}
+
+.reference-list li {
+  margin-bottom: 0.35rem;
+}
+
+@media (min-width: 36rem) {
+  .session-bar {
+    grid-template-columns: 1fr auto;
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 22rem) {
+  .picker-toolbar {
+    grid-template-columns: 1fr;
+  }
+}
+
+.panel {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: #fff;
+  border: 1px solid #dde1e8;
+  border-radius: 0.75rem;
+}
+
+.panel-title {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+}
+
+.fieldset {
+  margin: 0 0 1rem;
+  padding: 0.75rem;
+  border: 1px solid #e5e8ee;
+  border-radius: 0.5rem;
+}
+
+.fieldset legend {
+  padding: 0 0.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+details.fieldset.collapsible {
+  padding: 0;
+}
+
+details.fieldset.collapsible summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  list-style: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+details.fieldset.collapsible summary::-webkit-details-marker {
+  display: none;
+}
+
+details.fieldset.collapsible summary::after {
+  flex-shrink: 0;
+  color: #666;
+  font-size: 0.95rem;
+  content: "▸";
+}
+
+details.fieldset.collapsible[open] summary::after {
+  content: "▾";
+}
+
+details.fieldset.collapsible .checkbox-grid {
+  padding: 0 0.75rem 0.75rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+
+.field-hint {
+  margin: 0 0 0.75rem;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+label {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.checkbox-grid {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.checkbox-note {
+  color: #7a5b00;
+  font-size: 0.82rem;
+}
+
+.radio-group {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.radio-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.controls {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+select,
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+select,
+button,
+input,
+textarea {
+  padding: 0.65rem 0.85rem;
+  border: 1px solid #c8ccd4;
+  border-radius: 0.5rem;
+  background: #fff;
+}
+
+button {
+  cursor: pointer;
+  background: #1f6feb;
+  border-color: #1f6feb;
+  color: #fff;
+  font-weight: 600;
+}
+
+button.secondary-action {
+  background: #fff;
+  border-color: #c8ccd4;
+  color: #1a1a1a;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.primary-action {
+  width: 100%;
+}
+
+.card {
+  min-height: 8rem;
+  padding: 1.25rem;
+  background: #fff;
+  border: 1px solid #dde1e8;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 6%);
+}
+
+.card-label {
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #666;
+}
+
+.card-prompt {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.card-hint {
+  margin: 0.5rem 0 0;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.meta {
+  margin: 0.75rem 0;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.creator-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.panel-wide {
+  grid-column: 1 / -1;
+}
+
+.stack-form {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.creator-row {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.conjugation-details {
+  margin: 0.5rem 0;
+  padding: 0.75rem;
+  border: 1px solid #e5e8ee;
+  border-radius: 0.5rem;
+  background: #fafbfc;
+}
+
+.conjugation-details summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.conjugation-grid {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.export-block {
+  margin-bottom: 1rem;
+}
+
+.export-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+
+.export-header h3 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+textarea {
+  width: 100%;
+  resize: vertical;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+}
+
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.85em;
+}
+
+@media (min-width: 36rem) {
+  .creator-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .creator-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 48rem) {
+  .conjugation-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}

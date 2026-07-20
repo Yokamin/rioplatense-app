@@ -1,0 +1,21 @@
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.Zone.Identifier
+*:Zone.Identifier
+
+# Local tooling (none required for this project yet)
+node_modules/
+
+# LLM / AI editor config (local only — not part of the app)
+.cursor/
+.cursorrules
+.cursorignore
+**/.cursor/rules/
+AGENTS.md
+CLAUDE.md
+*.mdc
+
+# Informal class reference (optional local file, not a build dependency)
+Clase con Joakim.docx
+*.docx

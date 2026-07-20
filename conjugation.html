@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Conjugation Practice · Rioplatense</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header>
+        <p class="back-link"><a href="index.html">← Home</a></p>
+        <h1>Conjugation Practice</h1>
+      </header>
+
+      <div id="settings-overlay" class="settings-overlay">
+        <section class="settings-dialog" aria-labelledby="conjugation-settings-title">
+          <h2 id="conjugation-settings-title">Session settings</h2>
+          <p class="field-hint">Choose your filters, then start. Settings are remembered next time.</p>
+
+          <fieldset class="fieldset">
+            <legend>Practice style</legend>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="input-mode" value="type" checked />
+                Type answers (recommended)
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="input-mode" value="reveal" />
+                Reveal only (no typing, no stats)
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="field">
+            <label for="tense">Tense</label>
+            <select id="tense"></select>
+          </div>
+
+          <details class="fieldset collapsible">
+            <summary>Verb types</summary>
+            <div id="verb-type-filters" class="checkbox-grid"></div>
+          </details>
+
+          <details class="fieldset collapsible">
+            <summary>Pronouns</summary>
+            <div id="pronoun-filters" class="checkbox-grid"></div>
+          </details>
+
+          <fieldset class="fieldset">
+            <legend>Specific verbs (optional)</legend>
+            <p class="field-hint">
+              Verbs are grouped by frequency: <strong>core</strong> (essential), <strong>common</strong> (everyday),
+              and <strong>extended</strong> (useful but situational). Leave all selected to drill every verb.
+            </p>
+            <button
+              type="button"
+              id="verb-picker-toggle"
+              class="picker-toggle secondary-action"
+              aria-expanded="false"
+              aria-controls="verb-picker-modal"
+            >
+              All verbs
+            </button>
+          </fieldset>
+
+          <div
+            id="verb-picker-modal"
+            class="modal-overlay"
+            hidden
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="verb-picker-title"
+          >
+            <section class="modal-dialog modal-dialog-wide">
+              <h2 id="verb-picker-title">Choose verbs</h2>
+              <div class="picker-toolbar">
+                <button type="button" id="verb-select-core" class="secondary-action">Core only</button>
+                <button type="button" id="verb-select-common" class="secondary-action">Core + common</button>
+                <button type="button" id="verb-select-all" class="secondary-action">Select all</button>
+                <button type="button" id="verb-clear-all" class="secondary-action">Clear all</button>
+              </div>
+              <div id="verb-filters" class="picker-scroll verb-picker-list"></div>
+              <button type="button" id="verb-picker-done" class="primary-action">Done</button>
+            </section>
+          </div>
+
+          <button type="button" id="start-practice" class="primary-action">Start practice</button>
+        </section>
+      </div>
+
+      <div id="drill-session" hidden>
+        <div id="session-bar" class="session-bar">
+          <button type="button" id="stats-toggle" class="stats-chip" aria-haspopup="dialog"></button>
+          <button type="button" id="change-settings" class="secondary-action">Change settings</button>
+        </div>
+
+        <p id="dialect-warning" class="dialect-warning" hidden></p>
+        <section id="card" class="card" aria-live="polite"></section>
+        <p id="meta" class="meta"></p>
+
+        <form id="answer-form" class="answer-form">
+          <label for="answer-input">Your answer</label>
+          <input id="answer-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" />
+        </form>
+
+        <p id="answer-feedback" class="answer-feedback" hidden aria-live="polite"></p>
+
+        <div class="drill-actions">
+          <button type="button" id="primary-action" class="primary-action" data-action="check">Check</button>
+          <div id="secondary-actions" class="secondary-actions">
+            <button type="button" id="reveal-answer" class="secondary-action">Reveal Answer</button>
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="verb-detail-modal"
+        class="modal-overlay"
+        hidden
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="verb-detail-title"
+      >
+        <section class="modal-dialog modal-dialog-wide">
+          <div id="verb-detail-body"></div>
+          <button type="button" id="verb-detail-close" class="primary-action">Close</button>
+        </section>
+      </div>
+
+      <div id="stats-modal" class="modal-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="stats-modal-title">
+        <section class="modal-dialog">
+          <div id="stats-modal-body"></div>
+          <button type="button" id="stats-modal-close" class="primary-action">Close</button>
+        </section>
+      </div>
+    </main>
+
+    <script type="module" src="src/conjugation.js"></script>
+  </body>
+</html>
