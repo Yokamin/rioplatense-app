@@ -9,28 +9,32 @@
   <body>
     <main class="app app-wide">
       <header>
-        <p class="back-link"><a id="back-link" href="index.html">← Home</a></p>
-        <h1>Verb Lookup</h1>
-        <p class="subtitle">Browse all verbs — reflexives are tagged separately from regular conjugation verbs</p>
+        <div class="header-top">
+          <div id="locale-toggle"></div>
+        </div>
+        <p class="back-link"><a id="back-link" href="index.html" data-i18n="nav.home">← Home</a></p>
+        <h1 data-i18n="page.verbs.heading">Verb Lookup</h1>
+        <p class="subtitle" data-i18n="page.verbs.subtitle">Browse all verbs — reflexives are tagged separately from regular conjugation verbs</p>
       </header>
 
-      <div class="filter-tabs" role="tablist" aria-label="Verb list filter">
-        <button type="button" class="filter-tab is-active" data-filter="all" role="tab" aria-selected="true">
+      <div class="filter-tabs" role="tablist" data-i18n-aria="verbs.filterAria">
+        <button type="button" class="filter-tab is-active" data-filter="all" role="tab" aria-selected="true" data-i18n="verbs.filterAll">
           All
         </button>
-        <button type="button" class="filter-tab" data-filter="non-reflexive" role="tab" aria-selected="false">
+        <button type="button" class="filter-tab" data-filter="non-reflexive" role="tab" aria-selected="false" data-i18n="verbs.filterNonReflexive">
           Non-reflexive
         </button>
-        <button type="button" class="filter-tab" data-filter="reflexive" role="tab" aria-selected="false">
+        <button type="button" class="filter-tab" data-filter="reflexive" role="tab" aria-selected="false" data-i18n="verbs.filterReflexive">
           Reflexive only
         </button>
       </div>
 
       <div class="field">
-        <label for="verb-search">Search</label>
+        <label for="verb-search" data-i18n="verbs.searchLabel">Search</label>
         <input
           id="verb-search"
           type="search"
+          data-i18n-placeholder="verbs.searchPlaceholder"
           placeholder="Search by infinitive or English…"
           autocomplete="off"
           autocapitalize="off"
@@ -51,7 +55,7 @@
       >
         <section class="modal-dialog modal-dialog-wide">
           <div id="verb-detail-body"></div>
-          <button type="button" id="verb-detail-close" class="primary-action">Close</button>
+          <button type="button" id="verb-detail-close" class="primary-action" data-i18n="settings.close">Close</button>
         </section>
       </div>
     </main>

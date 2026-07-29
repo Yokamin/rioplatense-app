@@ -23,6 +23,8 @@ import {
   savePracticeSettings,
   SETTINGS_KEYS,
 } from "./settings-storage.js";
+import { t } from "./i18n/index.js";
+import { setupPageLocale } from "./page-locale.js";
 import { initStatsUi } from "./stats-ui.js";
 import { resetSessionStats } from "./stats-storage.js";
 import {
@@ -33,9 +35,11 @@ import {
   getCurrentDrillCard,
   getFileProtocolHint,
   getSelectedPracticeInputMode,
+  getTenseOptions,
   hideSettingsOverlay,
   initDrillActionHandlers,
   populateCheckboxGroup,
+  relocalizeActiveDrill,
   renderDrillCard,
   resetAnswerUi,
   setCardOrderOnForm,
@@ -43,7 +47,6 @@ import {
   setDrillStyleOnForm,
   setPracticeInputMode,
   showSettingsOverlay,
-  TENSE_OPTIONS,
   getCardOrderFromForm,
   getDrillStyleFromForm,
   getStemHintsFromForm,
@@ -120,6 +123,7 @@ let statsUi = null;
 let verbPicker = null;
 let verbDetailModal = null;
 let drillRunner = null;
+let backLinkRefresh = null;
 const verbByInfinitive = new Map();
 
 const drillUi = {
@@ -258,7 +262,7 @@ function showNextCard() {
 
 function populateTenseSelect() {
   tenseSelect.innerHTML = "";
-  for (const tense of TENSE_OPTIONS) {
+  for (const tense of getTenseOptions()) {
     const option = document.createElement("option");
     option.value = tense.id;
     option.textContent = tense.label;
@@ -304,7 +308,7 @@ function beginSession() {
   drillRunner = createDrillRunner(deck, activeSettings.cardOrder);
 
   if (deck.length === 0) {
-    alert("No reflexive verbs match these settings. Widen your filters and try again.");
+    alert(t("drill.noReflexiveVerbsMatch"));
     return;
   }
 
@@ -342,13 +346,15 @@ function configureExamChrome() {
   document.title = `${examReflexives.label} · ${examContext.label}`;
   pageTitleEl.textContent = examContext.label;
   examScopeBannerEl.hidden = false;
-  examScopeBannerEl.textContent = `${examReflexives.label} · ${scopedInfinitives.length} verbs in scope`;
-  settingsIntroEl.textContent =
-    "Exam-scoped reflexive practice. Answers include the reflexive pronoun (e.g. me lavo).";
-  initSmartBackLink(backLinkEl, {
-    fallbackHref: "exam.html",
-    fallbackLabel: "← Exam Practice",
+  examScopeBannerEl.textContent = t("drill.examScopeBanner", {
+    presetLabel: examReflexives.label,
+    count: scopedInfinitives.length,
   });
+  settingsIntroEl.textContent = t("settings.examReflexiveIntro");
+  backLinkRefresh = initSmartBackLink(backLinkEl, {
+    fallbackHref: "exam.html",
+    fallbackLabelKey: "nav.examPractice",
+  }).refresh;
 }
 
 function configureMainChrome() {
@@ -356,10 +362,9 @@ function configureMainChrome() {
     return;
   }
 
-  initSmartBackLink(backLinkEl, {
+  backLinkRefresh = initSmartBackLink(backLinkEl, {
     fallbackHref: "index.html",
-    fallbackLabel: "← Home",
-  });
+  }).refresh;
 }
 
 async function initExamScope() {
@@ -387,13 +392,35 @@ async function initExamScope() {
   configureExamChrome();
 }
 
+function refreshLocalizedUi() {
+  populateTenseSelect();
+  populateCheckboxGroup(
+    pronounFilters,
+    PRONOUN_KEYS.map((id) => ({
+      id,
+      label: PRONOUN_LABELS[id],
+      note: getConjugationDialectNote(id) ? t("pronoun.notActiveRioplatense") : null,
+    })),
+    "pronoun",
+    activeSettings.pronouns
+  );
+  verbPicker?.refreshLabels();
+  relocalizeActiveDrill(drillUi);
+  statsUi?.refreshChip();
+  if (isExamMode && examContext && examReflexives) {
+    configureExamChrome();
+  } else {
+    backLinkRefresh?.();
+  }
+}
+
 async function init() {
   try {
     resetSessionStats("reflexive");
 
     statsUi = initStatsUi({
       mode: "reflexive",
-      modeLabel: "Reflexive",
+      modeLabel: t("stats.modeReflexive"),
       toggleEl: statsToggle,
       modalEl: statsModal,
       modalBodyEl: statsModalBody,
@@ -410,7 +437,7 @@ async function init() {
       selectCommonBtn: verbSelectCommonBtn,
       clearAllBtn: verbClearAllBtn,
       countMatchingVerbs: countMatchingVerbsFromForm,
-      itemLabel: "reflexive verbs",
+      itemLabelKey: "verbPicker.itemLabelReflexiveVerbs",
     });
 
     verbDetailModal = initVerbDetailModal({
@@ -455,7 +482,7 @@ async function init() {
       PRONOUN_KEYS.map((id) => ({
         id,
         label: PRONOUN_LABELS[id],
-        note: getConjugationDialectNote(id) ? "not active Rioplatense" : null,
+        note: getConjugationDialectNote(id) ? t("pronoun.notActiveRioplatense") : null,
       })),
       "pronoun",
       activeSettings.pronouns
@@ -469,7 +496,10 @@ async function init() {
     startBtn.disabled = true;
     startBtn.insertAdjacentText(
       "beforebegin",
-      `Data load failed: ${error.message}.${getFileProtocolHint()}`
+      t("error.dataLoadFailed", {
+        message: error.message,
+        fileProtocolHint: getFileProtocolHint(),
+      })
     );
   }
 }
@@ -478,6 +508,11 @@ startBtn.addEventListener("click", beginSession);
 changeSettingsBtn.addEventListener("click", () => {
   applySettingsToForm(activeSettings);
   showSettingsOverlay(overlayEl, sessionEl);
+});
+
+setupPageLocale({
+  titleKey: isExamMode ? null : "page.title.reflexive",
+  onChange: refreshLocalizedUi,
 });
 
 init();

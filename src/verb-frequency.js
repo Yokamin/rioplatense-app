@@ -1,3 +1,5 @@
+import { t } from "./i18n/index.js";
+
 /** Frequency tiers for curated verbs in data/verbs.json */
 export const VERB_FREQUENCY = {
   core: "core",
@@ -5,19 +7,29 @@ export const VERB_FREQUENCY = {
   extended: "extended",
 };
 
+export const VERB_FREQUENCY_ORDER = ["core", "common", "extended"];
+
+/** @deprecated Use getFrequencyBadgeLabel(tier) for localized labels. */
 export const VERB_FREQUENCY_LABELS = {
   core: "Core",
   common: "Common",
   extended: "Extended",
 };
 
-export const VERB_FREQUENCY_ORDER = ["core", "common", "extended"];
-
+/** @deprecated Use getFrequencySectionLabel(tier) for localized labels. */
 export const VERB_FREQUENCY_SECTIONS = {
   core: "Core — essential (ser, ir, hacer…)",
   common: "Common — everyday verbs",
   extended: "Extended — useful but more situational",
 };
+
+export function getFrequencyBadgeLabel(tier) {
+  return t(`frequency.${tier}`);
+}
+
+export function getFrequencySectionLabel(tier) {
+  return t(`frequency.section.${tier}`);
+}
 
 /** Supports legacy is_core until all data uses frequency. */
 export function getVerbFrequency(verb) {
@@ -44,6 +56,5 @@ export function getVerbsByFrequency(verbs, tier) {
 }
 
 export function getFrequencyBadge(verb) {
-  const tier = getVerbFrequency(verb);
-  return VERB_FREQUENCY_LABELS[tier] ?? "";
+  return getFrequencyBadgeLabel(getVerbFrequency(verb));
 }

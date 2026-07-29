@@ -18,6 +18,8 @@ import {
   SETTINGS_KEYS,
   examConjugationSettingsKey,
 } from "./settings-storage.js";
+import { t } from "./i18n/index.js";
+import { setupPageLocale } from "./page-locale.js";
 import { initStatsUi } from "./stats-ui.js";
 import { resetSessionStats } from "./stats-storage.js";
 import {
@@ -28,9 +30,12 @@ import {
   getCurrentDrillCard,
   getFileProtocolHint,
   getSelectedPracticeInputMode,
+  getTenseOptions,
+  getVerbTypeGroups,
   hideSettingsOverlay,
   initDrillActionHandlers,
   populateCheckboxGroup,
+  relocalizeActiveDrill,
   renderDrillCard,
   resetAnswerUi,
   setCardOrderOnForm,
@@ -38,8 +43,6 @@ import {
   setDrillStyleOnForm,
   setPracticeInputMode,
   showSettingsOverlay,
-  TENSE_OPTIONS,
-  VERB_TYPE_GROUPS,
   allVerbTypeIds,
   expandVerbTypeGroups,
   getCardOrderFromForm,
@@ -127,6 +130,7 @@ let statsUi = null;
 let verbPicker = null;
 let verbDetailModal = null;
 let drillRunner = null;
+let backLinkRefresh = null;
 const verbByInfinitive = new Map();
 
 const drillUi = {
@@ -276,7 +280,7 @@ function showNextCard() {
 
 function populateTenseSelect() {
   tenseSelect.innerHTML = "";
-  for (const tense of TENSE_OPTIONS) {
+  for (const tense of getTenseOptions()) {
     const option = document.createElement("option");
     option.value = tense.id;
     option.textContent = tense.label;
@@ -320,7 +324,7 @@ function beginSession() {
 
   if (deck.length === 0) {
     startBtn.disabled = false;
-    alert("No verbs match these settings. Widen your filters and try again.");
+    alert(t("drill.noVerbsMatch"));
     return;
   }
 
@@ -361,13 +365,15 @@ function configureExamChrome() {
   document.title = `${examPreset.label} · ${examContext.label}`;
   pageTitleEl.textContent = examContext.label;
   examScopeBannerEl.hidden = false;
-  examScopeBannerEl.textContent = `${examPreset.label} · ${scopedInfinitives.length} verbs in scope`;
-  settingsIntroEl.textContent =
-    "Exam-scoped conjugation. You can still narrow pronouns or pick specific verbs within this list.";
-  initSmartBackLink(backLinkEl, {
-    fallbackHref: "exam.html",
-    fallbackLabel: "← Exam Practice",
+  examScopeBannerEl.textContent = t("drill.examScopeBanner", {
+    presetLabel: examPreset.label,
+    count: scopedInfinitives.length,
   });
+  settingsIntroEl.textContent = t("settings.examConjugationIntro");
+  backLinkRefresh = initSmartBackLink(backLinkEl, {
+    fallbackHref: "exam.html",
+    fallbackLabelKey: "nav.examPractice",
+  }).refresh;
 }
 
 function configureMainChrome() {
@@ -375,10 +381,9 @@ function configureMainChrome() {
     return;
   }
 
-  initSmartBackLink(backLinkEl, {
+  backLinkRefresh = initSmartBackLink(backLinkEl, {
     fallbackHref: "index.html",
-    fallbackLabel: "← Home",
-  });
+  }).refresh;
 }
 
 async function initExamScope() {
@@ -410,13 +415,41 @@ async function initExamScope() {
   configureExamChrome();
 }
 
+function refreshLocalizedUi() {
+  populateTenseSelect();
+  populateCheckboxGroup(
+    verbTypeFilters,
+    getVerbTypeGroups(),
+    "verb-type-group",
+    verbTypesToGroupSelection(activeSettings.types)
+  );
+  populateCheckboxGroup(
+    pronounFilters,
+    PRONOUN_KEYS.map((id) => ({
+      id,
+      label: PRONOUN_LABELS[id],
+      note: getConjugationDialectNote(id) ? t("pronoun.notActiveRioplatense") : null,
+    })),
+    "pronoun",
+    activeSettings.pronouns
+  );
+  verbPicker?.refreshLabels();
+  relocalizeActiveDrill(drillUi);
+  statsUi?.refreshChip();
+  if (isExamMode && examContext && examPreset) {
+    configureExamChrome();
+  } else {
+    backLinkRefresh?.();
+  }
+}
+
 async function init() {
   try {
     resetSessionStats("conjugation");
 
     statsUi = initStatsUi({
       mode: "conjugation",
-      modeLabel: "Conjugation",
+      modeLabel: t("stats.modeConjugation"),
       toggleEl: statsToggle,
       modalEl: statsModal,
       modalBodyEl: statsModalBody,
@@ -474,7 +507,7 @@ async function init() {
     populateTenseSelect();
     populateCheckboxGroup(
       verbTypeFilters,
-      VERB_TYPE_GROUPS,
+      getVerbTypeGroups(),
       "verb-type-group",
       verbTypesToGroupSelection(activeSettings.types)
     );
@@ -483,7 +516,7 @@ async function init() {
       PRONOUN_KEYS.map((id) => ({
         id,
         label: PRONOUN_LABELS[id],
-        note: getConjugationDialectNote(id) ? "not active Rioplatense" : null,
+        note: getConjugationDialectNote(id) ? t("pronoun.notActiveRioplatense") : null,
       })),
       "pronoun",
       activeSettings.pronouns
@@ -497,7 +530,10 @@ async function init() {
     startBtn.disabled = true;
     startBtn.insertAdjacentText(
       "beforebegin",
-      `Data load failed: ${error.message}.${getFileProtocolHint()}`
+      t("error.dataLoadFailed", {
+        message: error.message,
+        fileProtocolHint: getFileProtocolHint(),
+      })
     );
   }
 }
@@ -506,6 +542,11 @@ startBtn.addEventListener("click", beginSession);
 changeSettingsBtn.addEventListener("click", () => {
   applySettingsToForm(activeSettings);
   showSettingsOverlay(overlayEl, sessionEl);
+});
+
+setupPageLocale({
+  titleKey: isExamMode ? null : "page.title.conjugation",
+  onChange: refreshLocalizedUi,
 });
 
 init();

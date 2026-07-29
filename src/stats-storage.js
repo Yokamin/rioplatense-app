@@ -1,3 +1,5 @@
+import { t } from "./i18n/index.js";
+
 const STATS_KEY = "rioplatense-stats";
 const MAX_DAILY_ENTRIES = 90;
 
@@ -117,10 +119,12 @@ export function recordAnswerResult(mode, resultType) {
 
 export function formatCompactCounts(counts) {
   const normalized = normalizeCounts(counts);
-  return (
-    `${normalized.exact}✓ · ${normalized.accent}~ · ${normalized.wrong}✗ · ` +
-    `${normalized.revealed} reveal`
-  );
+  return t("stats.compactCounts", {
+    exact: normalized.exact,
+    accent: normalized.accent,
+    wrong: normalized.wrong,
+    revealed: normalized.revealed,
+  });
 }
 
 export function formatStatsLine(counts, label) {
@@ -128,7 +132,7 @@ export function formatStatsLine(counts, label) {
 }
 
 export function formatSessionAndLifetimeStats(mode) {
-  return `${formatStatsLine(getSessionStats(mode), "Session")} | ${formatStatsLine(getLifetimeStats(mode), "All time")}`;
+  return `${formatStatsLine(getSessionStats(mode), t("stats.sessionLabel"))} | ${formatStatsLine(getLifetimeStats(mode), t("stats.allTimeLabel"))}`;
 }
 
 export function getDailyStats(mode, limit = 14) {

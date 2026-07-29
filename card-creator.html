@@ -9,109 +9,112 @@
   <body>
     <main class="app app-wide">
       <header>
-        <p class="back-link"><a id="back-link" href="index.html">← Home</a></p>
-        <h1>Card Creator</h1>
-        <p class="subtitle">Add draft cards locally, then export JSON into your data files</p>
+        <div class="header-top">
+          <div id="locale-toggle"></div>
+        </div>
+        <p class="back-link"><a id="back-link" href="index.html" data-i18n="nav.home">← Home</a></p>
+        <h1 data-i18n="page.creator.heading">Card Creator</h1>
+        <p class="subtitle" data-i18n="page.creator.subtitle">Add draft cards locally, then export JSON into your data files</p>
       </header>
 
-      <p id="status" class="status" aria-live="polite">Loading data…</p>
+      <p id="status" class="status" aria-live="polite" data-i18n="creator.loading">Loading data…</p>
 
       <section class="panel">
-        <h2 class="panel-title">Draft summary</h2>
+        <h2 class="panel-title" data-i18n="creator.draftSummaryTitle">Draft summary</h2>
         <p id="draft-summary" class="field-hint"></p>
-        <button type="button" id="clear-drafts" class="secondary-action">Clear local drafts</button>
+        <button type="button" id="clear-drafts" class="secondary-action" data-i18n="creator.clearDrafts">Clear local drafts</button>
       </section>
 
       <div class="creator-grid">
         <section class="panel">
-          <h2 class="panel-title">Add vocabulary word</h2>
+          <h2 class="panel-title" data-i18n="creator.addVocabTitle">Add vocabulary word</h2>
           <form id="add-vocab-form" class="stack-form">
             <div class="field">
-              <label for="vocab-spanish">Spanish</label>
+              <label for="vocab-spanish" data-i18n="creator.spanishLabel">Spanish</label>
               <input id="vocab-spanish" name="spanish" required autocomplete="off" />
             </div>
             <div class="field">
-              <label for="vocab-english">English</label>
+              <label for="vocab-english" data-i18n="creator.englishLabel">English</label>
               <input id="vocab-english" name="english" required autocomplete="off" />
             </div>
             <div class="field">
-              <label for="vocab-category">Category</label>
+              <label for="vocab-category" data-i18n="creator.categoryLabel">Category</label>
               <select id="vocab-category" name="categoryId" required></select>
             </div>
-            <button type="submit" class="primary-action">Save vocabulary draft</button>
+            <button type="submit" class="primary-action" data-i18n="creator.saveVocabDraft">Save vocabulary draft</button>
           </form>
         </section>
 
         <section class="panel">
-          <h2 class="panel-title">Add new category</h2>
+          <h2 class="panel-title" data-i18n="creator.addCategoryTitle">Add new category</h2>
           <form id="add-category-form" class="stack-form">
             <div class="field">
-              <label for="category-name">Display name</label>
-              <input id="category-name" name="displayName" placeholder="Animals" required autocomplete="off" />
+              <label for="category-name" data-i18n="creator.displayNameLabel">Display name</label>
+              <input id="category-name" name="displayName" data-i18n-placeholder="creator.displayNamePlaceholder" placeholder="Animals" required autocomplete="off" />
             </div>
             <div class="field">
-              <label for="category-id">Id (optional slug)</label>
-              <input id="category-id" name="categoryId" placeholder="animals" autocomplete="off" />
+              <label for="category-id" data-i18n="creator.categoryIdLabel">Id (optional slug)</label>
+              <input id="category-id" name="categoryId" data-i18n-placeholder="creator.categoryIdPlaceholder" placeholder="animals" autocomplete="off" />
             </div>
-            <button type="submit" class="secondary-action">Add category draft</button>
+            <button type="submit" class="secondary-action" data-i18n="creator.addCategoryDraft">Add category draft</button>
           </form>
         </section>
 
         <section class="panel panel-wide">
-          <h2 class="panel-title">Add verb</h2>
-          <p class="field-hint">You can save with metadata only. Conjugations are optional — incomplete verbs won't appear in drills.</p>
+          <h2 class="panel-title" data-i18n="creator.addVerbTitle">Add verb</h2>
+          <p class="field-hint" data-i18n="creator.addVerbHint">You can save with metadata only. Conjugations are optional — incomplete verbs won't appear in drills.</p>
           <form id="add-verb-form" class="stack-form">
             <div class="creator-row">
               <div class="field">
-                <label for="verb-infinitive">Infinitive</label>
+                <label for="verb-infinitive" data-i18n="creator.infinitiveLabel">Infinitive</label>
                 <input id="verb-infinitive" name="infinitive" required autocomplete="off" />
               </div>
               <div class="field">
-                <label for="verb-english">English</label>
+                <label for="verb-english" data-i18n="creator.englishLabel">English</label>
                 <input id="verb-english" name="english" required autocomplete="off" />
               </div>
             </div>
             <div class="creator-row">
               <div class="field">
-                <label for="verb-type">Type</label>
+                <label for="verb-type" data-i18n="creator.typeLabel">Type</label>
                 <select id="verb-type" name="type" required></select>
               </div>
               <div class="field">
-                <label for="verb-reflexive">Reflexive</label>
+                <label for="verb-reflexive" data-i18n="creator.reflexiveLabel">Reflexive</label>
                 <select id="verb-reflexive" name="isReflexive">
-                  <option value="false">No</option>
-                  <option value="true">Yes</option>
+                  <option value="false" data-i18n="creator.no">No</option>
+                  <option value="true" data-i18n="creator.yes">Yes</option>
                 </select>
               </div>
             </div>
             <div class="field">
-              <label for="verb-note">Note (optional)</label>
+              <label for="verb-note" data-i18n="creator.noteLabel">Note (optional)</label>
               <input id="verb-note" name="note" autocomplete="off" />
             </div>
 
             <details class="conjugation-details">
-              <summary>Add present tense conjugations now (optional)</summary>
+              <summary data-i18n="creator.conjugationsSummary">Add present tense conjugations now (optional)</summary>
               <div id="conjugation-fields" class="conjugation-grid"></div>
             </details>
 
-            <button type="submit" class="primary-action">Save verb draft</button>
+            <button type="submit" class="primary-action" data-i18n="creator.saveVerbDraft">Save verb draft</button>
           </form>
         </section>
 
         <section class="panel panel-wide">
-          <h2 class="panel-title">Export merged JSON</h2>
-          <p class="field-hint">Copy each block into <code>data/vocab.json</code> and <code>data/verbs.json</code>, then commit via Git.</p>
+          <h2 class="panel-title" data-i18n="creator.exportTitle">Export merged JSON</h2>
+          <p class="field-hint" data-i18n="creator.exportHint">Copy each block into data/vocab.json and data/verbs.json, then commit via Git.</p>
           <div class="export-block">
             <div class="export-header">
-              <h3>vocab.json</h3>
-              <button type="button" id="copy-vocab" class="secondary-action">Copy</button>
+              <h3 data-i18n="creator.exportVocabFile">vocab.json</h3>
+              <button type="button" id="copy-vocab" class="secondary-action" data-i18n="creator.copy">Copy</button>
             </div>
             <textarea id="export-vocab" readonly rows="10"></textarea>
           </div>
           <div class="export-block">
             <div class="export-header">
-              <h3>verbs.json</h3>
-              <button type="button" id="copy-verbs" class="secondary-action">Copy</button>
+              <h3 data-i18n="creator.exportVerbsFile">verbs.json</h3>
+              <button type="button" id="copy-verbs" class="secondary-action" data-i18n="creator.copy">Copy</button>
             </div>
             <textarea id="export-verbs" readonly rows="10"></textarea>
           </div>

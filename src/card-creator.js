@@ -14,8 +14,9 @@ import {
   loadDrafts,
   slugifyCategoryId,
 } from "./draft-storage.js";
-import { VERB_TYPES } from "./ui-helpers.js";
-import { getFileProtocolHint, setStatus } from "./ui-helpers.js";
+import { t } from "./i18n/index.js";
+import { setupPageLocale } from "./page-locale.js";
+import { getFileProtocolHint, getVerbTypes, setStatus } from "./ui-helpers.js";
 import { initSmartBackLink } from "./navigation.js";
 
 const statusEl = document.getElementById("status");
@@ -28,13 +29,15 @@ const exportVerbsEl = document.getElementById("export-verbs");
 
 let mergedVocab = null;
 let mergedVerbs = null;
+let backLinkRefresh = null;
 
 function renderDraftSummary() {
   const summary = getDraftSummary();
-  draftSummaryEl.textContent =
-    `${summary.vocabItemCount} vocab word(s), ` +
-    `${summary.categoryCount} new categor(ies), ` +
-    `${summary.verbCount} verb draft(s) saved in this browser.`;
+  draftSummaryEl.textContent = t("creator.draftSummary", {
+    vocabCount: summary.vocabItemCount,
+    categoryCount: summary.categoryCount,
+    verbCount: summary.verbCount,
+  });
 }
 
 function populateCategorySelect(vocab) {
@@ -49,7 +52,7 @@ function populateCategorySelect(vocab) {
 
 function populateVerbTypeSelect() {
   verbTypeSelect.innerHTML = "";
-  for (const type of VERB_TYPES) {
+  for (const type of getVerbTypes()) {
     const option = document.createElement("option");
     option.value = type.id;
     option.textContent = type.label;
@@ -90,7 +93,7 @@ function readConjugationsFromForm(formData) {
   }
 
   if (!allFilled) {
-    throw new Error("If you add conjugations, all 7 pronoun fields must be filled.");
+    throw new Error(t("error.conjugationsIncomplete"));
   }
 
   return conjugations;
@@ -111,19 +114,30 @@ async function reloadMergedData() {
   renderDraftSummary();
 }
 
+function refreshLocalizedUi() {
+  populateVerbTypeSelect();
+  renderDraftSummary();
+  backLinkRefresh?.();
+}
+
 async function init() {
-  initSmartBackLink(document.getElementById("back-link"), {
+  backLinkRefresh = initSmartBackLink(document.getElementById("back-link"), {
     fallbackHref: "index.html",
-    fallbackLabel: "← Home",
-  });
+  }).refresh;
 
   try {
     populateVerbTypeSelect();
     buildConjugationFields();
     await reloadMergedData();
-    setStatus("Drafts load from localStorage and merge with data files for export and drills.");
+    setStatus(t("creator.statusLoaded"));
   } catch (error) {
-    setStatus(`Data load failed: ${error.message}.${getFileProtocolHint()}`, true);
+    setStatus(
+      t("error.dataLoadFailed", {
+        message: error.message,
+        fileProtocolHint: getFileProtocolHint(),
+      }),
+      true
+    );
   }
 }
 
@@ -140,7 +154,7 @@ document.getElementById("add-vocab-form").addEventListener("submit", async (even
 
   form.reset();
   await reloadMergedData();
-  setStatus("Vocabulary draft saved.");
+  setStatus(t("creator.vocabSaved"));
 });
 
 document.getElementById("add-category-form").addEventListener("submit", async (event) => {
@@ -153,7 +167,11 @@ document.getElementById("add-category-form").addEventListener("submit", async (e
   addVocabCategory(displayName, customId || null);
   form.reset();
   await reloadMergedData();
-  setStatus(`Category draft saved${customId ? "" : ` as "${slugifyCategoryId(displayName)}"`}.`);
+  setStatus(
+    customId
+      ? t("creator.categorySavedWithSlug", { slug: customId })
+      : t("creator.categorySaved")
+  );
 });
 
 document.getElementById("add-verb-form").addEventListener("submit", async (event) => {
@@ -184,9 +202,7 @@ document.getElementById("add-verb-form").addEventListener("submit", async (event
     verbTypeSelect.value = "unknown";
     await reloadMergedData();
     setStatus(
-      conjugations
-        ? "Verb draft saved with present tense conjugations."
-        : "Verb draft saved (metadata only — add conjugations later for drills)."
+      conjugations ? t("creator.verbSavedWithConjugations") : t("creator.verbSavedMetadata")
     );
   } catch (error) {
     setStatus(error.message, true);
@@ -194,26 +210,31 @@ document.getElementById("add-verb-form").addEventListener("submit", async (event
 });
 
 document.getElementById("clear-drafts").addEventListener("click", async () => {
-  if (!confirm("Clear all local Card Creator drafts in this browser?")) {
+  if (!confirm(t("creator.clearDraftsConfirm"))) {
     return;
   }
 
   clearDrafts();
   await reloadMergedData();
-  setStatus("Local drafts cleared.");
+  setStatus(t("creator.draftsCleared"));
 });
 
 async function copyText(text, label) {
   await navigator.clipboard.writeText(text);
-  setStatus(`${label} copied to clipboard.`);
+  setStatus(t("creator.copiedToClipboard", { label }));
 }
 
 document.getElementById("copy-vocab").addEventListener("click", () => {
-  copyText(exportVocabEl.value, "vocab.json");
+  copyText(exportVocabEl.value, t("creator.exportVocabFile"));
 });
 
 document.getElementById("copy-verbs").addEventListener("click", () => {
-  copyText(exportVerbsEl.value, "verbs.json");
+  copyText(exportVerbsEl.value, t("creator.exportVerbsFile"));
+});
+
+setupPageLocale({
+  titleKey: "page.title.cardCreator",
+  onChange: refreshLocalizedUi,
 });
 
 init();

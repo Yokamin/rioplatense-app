@@ -998,3 +998,29 @@ code {
     grid-template-columns: 1fr 1fr;
   }
 }
+
+.header-top {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.35rem;
+}
+
+.locale-toggle {
+  display: inline-flex;
+  gap: 0.25rem;
+}
+
+.locale-btn {
+  font-size: 0.75rem;
+  padding: 0.2rem 0.45rem;
+  border: 1px solid #dde1e8;
+  border-radius: 0.35rem;
+  background: #fff;
+  cursor: pointer;
+}
+
+.locale-btn.is-active {
+  background: #1a1a1a;
+  color: #fff;
+  border-color: #1a1a1a;
+}

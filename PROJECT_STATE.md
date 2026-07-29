@@ -66,15 +66,15 @@ When generating learning materials, drill prompts, or instructional feedback in 
 
 ---
 
-## 🌐 Internationalization (planned)
+## 🌐 Internationalization
 
-- **Locale files** (planned): `src/i18n/en.js`, `src/i18n/es.js` — parallel key → string maps.
-- **API** (planned): `src/i18n/index.js` — `t(key)`, `setLocale("en"|"es")`, `getLocale()`, `applyDocumentI18n()`.
-- **Toggle**: small EN | ES control in page headers; choice persisted in `localStorage`.
-- **Rule for all new UI**: every new key **must** exist in **both** locale files. Run `node scripts/check-i18n.js` when implemented.
-- **Fallback**: missing key → English → visible `[missing: key]` in development.
-
-**Migration order** (when started): drill session chrome → settings HTML → home → exam → vocab → tools pages.
+- **Locale files**: `src/i18n/en.js`, `src/i18n/es.js` — parallel key → string maps (281 keys).
+- **API**: `src/i18n/index.js` — `t(key, params?)`, `setLocale("en"|"es")`, `getLocale()`, `applyDocumentI18n()`, `initLocaleToggle()`.
+- **Page bootstrap**: `src/page-locale.js` — `setupPageLocale({ titleKey, onChange })` on every page.
+- **Toggle**: EN | ES in page header; choice persisted in `localStorage` (`rioplatense-locale`).
+- **HTML**: static labels use `data-i18n="key"`; dynamic strings use `t()` in JS.
+- **Missing key**: shows `⟦missing: key⟧` in the active locale (no silent English fallback in ES mode).
+- **Rule for all new UI**: every new key **must** exist in **both** locale files. Run `node scripts/check-i18n.js` before pushing.
 
 ---
 
@@ -124,7 +124,7 @@ Verb entries contain base metadata and one or more **tense objects**, each holdi
 - [ ] Richer pedagogical feedback (explain error type before correction).
 
 ### Phase 3: Polish & Expansion
-- [ ] UI locale pack (EN/ES) — planned
+- [x] UI locale pack (EN/ES) — on `feature/i18n` branch; merge after local testing
 - [ ] Additional tenses (e.g. preterite) via new tense keys on verb objects.
 - [ ] Mobile PWA (manifest, icons, offline shell).
 
@@ -159,7 +159,8 @@ Verb entries contain base metadata and one or more **tense objects**, each holdi
 | `verb-detail-modal.js` / `verb-detail-ui.js` | Conjugation popup |
 | `settings-storage.js` | localStorage keys (main + exam-scoped) |
 | `card-creator.js` | Draft entry + export |
-| `i18n/index.js` | Locale toggle, `t()`, document i18n *(planned)* |
+| `i18n/index.js` | Locale toggle, `t()`, document i18n |
+| `page-locale.js` | Per-page locale bootstrap |
 
 ---
 

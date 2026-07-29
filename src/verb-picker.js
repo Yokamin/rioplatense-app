@@ -1,27 +1,27 @@
-import {
-  VERB_FREQUENCY_ORDER,
-  VERB_FREQUENCY_SECTIONS,
-} from "./verb-frequency.js";
+import { t } from "./i18n/index.js";
+import { getFrequencySectionLabel } from "./verb-frequency.js";
 import {
   getCheckedValues,
   populateCheckboxGroup,
   setCheckedValues,
 } from "./ui-helpers.js";
 
-function formatVerbPickerLabel({ selectedCount, total, matchCount, itemLabel = "verbs" }) {
+function formatVerbPickerLabel({ selectedCount, total, matchCount, itemLabelKey }) {
+  const itemLabel = t(itemLabelKey);
+
   if (selectedCount === 0) {
-    return "No verbs selected";
+    return t("verbPicker.noVerbsSelected");
   }
 
   if (matchCount !== selectedCount) {
-    return `${selectedCount} selected · ${matchCount} match filters`;
+    return t("verbPicker.selectedMatchFilters", { selectedCount, matchCount });
   }
 
   if (selectedCount === total) {
-    return `All ${itemLabel} (${total})`;
+    return t("verbPicker.allItems", { itemLabel, total });
   }
 
-  return `${selectedCount} of ${total} ${itemLabel} selected`;
+  return t("verbPicker.selectedOfTotal", { selectedCount, total, itemLabel });
 }
 
 export function initVerbPicker({
@@ -35,7 +35,7 @@ export function initVerbPicker({
   clearAllBtn,
   countMatchingVerbs,
   onChange,
-  itemLabel = "verbs",
+  itemLabelKey = "verbPicker.itemLabelVerbs",
 }) {
   let verbItems = [];
 
@@ -50,7 +50,7 @@ export function initVerbPicker({
       selectedCount: selected.length,
       total,
       matchCount,
-      itemLabel,
+      itemLabelKey,
     });
   }
 
@@ -59,7 +59,7 @@ export function initVerbPicker({
     const defaultSelected =
       selectedIds ?? verbItems.map((item) => item.id);
 
-    for (const tier of VERB_FREQUENCY_ORDER) {
+    for (const tier of ["core", "common", "extended"]) {
       const tierItems = verbItems.filter((item) => item.frequency === tier);
       if (tierItems.length === 0) {
         continue;
@@ -67,7 +67,7 @@ export function initVerbPicker({
 
       const heading = document.createElement("h3");
       heading.className = "picker-tier-heading";
-      heading.textContent = VERB_FREQUENCY_SECTIONS[tier];
+      heading.textContent = getFrequencySectionLabel(tier);
       listEl.appendChild(heading);
 
       const grid = document.createElement("div");
@@ -114,6 +114,11 @@ export function initVerbPicker({
   function closeModal() {
     modalEl.hidden = true;
     toggleEl.setAttribute("aria-expanded", "false");
+  }
+
+  function refreshLabels() {
+    renderVerbList(getCheckedValues(listEl));
+    updateToggleLabel();
   }
 
   toggleEl.addEventListener("click", openModal);
@@ -167,6 +172,7 @@ export function initVerbPicker({
     readSelectionForSettings,
     applySelection,
     updateToggleLabel,
+    refreshLabels,
     closeModal,
   };
 }

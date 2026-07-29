@@ -1,4 +1,5 @@
 import { ANSWER_FEEDBACK, evaluateAnswer } from "./answer-check.js";
+import { t } from "./i18n/index.js";
 import { formatStemChangeHint, getStemChangeHint } from "./stem-hints.js";
 import { getConjugationDialectNote } from "./rioplatense-notes.js";
 import { recordAnswerResult } from "./stats-storage.js";
@@ -12,6 +13,7 @@ let showStemHints = true;
 let statsRefresh = null;
 let verbPeekSyncFn = null;
 let sessionChrome = null;
+let lastDrillRenderContext = null;
 
 function isTypedPracticeMode() {
   return inputMode === "type";
@@ -25,6 +27,21 @@ function recordResultIfTracking(mode, resultType) {
 
 function normalizeInputMode(mode) {
   return mode === "reveal" ? "reveal" : "type";
+}
+
+function formatTenseLabel(tenseId) {
+  const key = `tense.${tenseId}`;
+  const label = t(key);
+  return label.startsWith("⟦missing:") ? tenseId.replace(/_/g, " ") : label;
+}
+
+function formatProgressLine(deckProgress) {
+  return deckProgress && deckProgress.total > 0
+    ? t("drill.progressLine", {
+        current: deckProgress.current,
+        total: deckProgress.total,
+      })
+    : "";
 }
 
 export function syncDrillSessionChrome() {
@@ -99,7 +116,7 @@ export function syncDrillActions(ui) {
   primaryBtn.disabled = false;
 
   if (canAdvanceCard()) {
-    primaryBtn.textContent = "Next Card";
+    primaryBtn.textContent = t("drill.nextCard");
     primaryBtn.dataset.action = "next";
     if (answerInput) {
       answerInput.disabled = true;
@@ -124,7 +141,7 @@ export function syncDrillActions(ui) {
     if (ui.tableAnswerFields) {
       ui.tableAnswerFields.hidden = !isTableDrillCard(currentCard);
     }
-    primaryBtn.textContent = "Reveal Answer";
+    primaryBtn.textContent = t("drill.revealAnswer");
     primaryBtn.dataset.action = "reveal";
     if (secondaryActionsEl) {
       secondaryActionsEl.hidden = true;
@@ -145,7 +162,7 @@ export function syncDrillActions(ui) {
   for (const input of ui.tableAnswerFields?.querySelectorAll(".conjugation-table-input") ?? []) {
     input.disabled = false;
   }
-  primaryBtn.textContent = "Check";
+  primaryBtn.textContent = t("drill.check");
   primaryBtn.dataset.action = "check";
   if (secondaryActionsEl) {
     secondaryActionsEl.hidden = false;
@@ -153,7 +170,7 @@ export function syncDrillActions(ui) {
   if (revealBtn) {
     revealBtn.hidden = false;
     revealBtn.disabled = false;
-    revealBtn.textContent = "Reveal Answer";
+    revealBtn.textContent = t("drill.revealAnswer");
   }
   verbPeekSyncFn?.();
 }
@@ -215,9 +232,7 @@ export function updateStatsDisplay() {
 }
 
 export function getFileProtocolHint() {
-  return window.location.protocol === "file:"
-    ? " Open via a local server (e.g. python3 -m http.server) — fetch does not work from file://."
-    : "";
+  return window.location.protocol === "file:" ? t("error.fileProtocolHint") : "";
 }
 
 export function setStatus(statusEl, message, isError = false) {
@@ -235,28 +250,47 @@ export function hideSettingsOverlay(overlayEl, sessionEl) {
   sessionEl.hidden = false;
 }
 
-export function renderDrillCard(
+function buildMetaText(card, practiceInputMode, deckProgress) {
+  const progressLine = formatProgressLine(deckProgress);
+
+  if (card.type === "vocab") {
+    return practiceInputMode === "type"
+      ? t("drill.vocabTypePrompt", { english: card.english })
+      : t("drill.vocabRecallPrompt", { english: card.english });
+  }
+
+  if (card.type === "verb_table" || card.type === "reflexive_table") {
+    return practiceInputMode === "type"
+      ? t("drill.tableTypePrompt", { progressLine })
+      : t("drill.tableRecallPrompt", { progressLine });
+  }
+
+  if (card.type === "reflexive") {
+    return practiceInputMode === "type"
+      ? t("drill.reflexiveTypePrompt", { progressLine })
+      : t("drill.reflexiveRecallPrompt", { progressLine });
+  }
+
+  const defaultType = t("drill.conjugateTypeDefault");
+  const defaultRecall = t("drill.conjugateRecallDefault");
+  return practiceInputMode === "type"
+    ? (card.note ?? defaultType) + progressLine
+    : (card.note ?? defaultRecall) + progressLine;
+}
+
+function paintDrillCardChrome(
   cardEl,
   metaEl,
   dialectWarningEl,
   card,
   pronounLabels,
-  practiceInputMode = inputMode,
-  drillUi = null,
-  deckProgress = null
+  practiceInputMode,
+  drillUi,
+  deckProgress
 ) {
-  currentCard = card;
-  answerRevealed = false;
-  cardResolved = null;
-
-  if (dialectWarningEl) {
-    dialectWarningEl.hidden = true;
-    dialectWarningEl.textContent = "";
-  }
-
   if (!card) {
-    cardEl.innerHTML = "<p>No cards match the current settings.</p>";
-    metaEl.textContent = "Open settings and widen your filters.";
+    cardEl.innerHTML = `<p>${t("drill.noCardsMatch")}</p>`;
+    metaEl.textContent = t("drill.widenFilters");
     if (drillUi?.singleAnswerRow) {
       drillUi.singleAnswerRow.hidden = true;
     }
@@ -264,50 +298,46 @@ export function renderDrillCard(
       drillUi.tableAnswerFields.hidden = true;
       drillUi.tableAnswerFields.innerHTML = "";
     }
-    return false;
+    return;
+  }
+
+  if (dialectWarningEl) {
+    dialectWarningEl.hidden = true;
+    dialectWarningEl.textContent = "";
   }
 
   if (drillUi?.singleAnswerRow) {
     drillUi.singleAnswerRow.hidden = isTableDrillCard(card);
   }
-  if (drillUi?.tableAnswerFields) {
-    drillUi.tableAnswerFields.hidden = !isTableDrillCard(card);
-    drillUi.tableAnswerFields.innerHTML = "";
-  }
 
-  const progressLine =
-    deckProgress && deckProgress.total > 0
-      ? ` · ${deckProgress.current} of ${deckProgress.total} in this round`
-      : "";
+  const tenseLabel = formatTenseLabel(card.tense);
+  const verbPeekAria = t("drill.verbPeekAria");
 
   if (card.type === "vocab") {
     cardEl.innerHTML = `
-      <p class="card-label">Vocabulary</p>
+      <p class="card-label">${t("drill.vocabulary")}</p>
       <p class="card-prompt">${escapeHtml(card.prompt)}</p>
-      <p class="card-hint">Category: ${escapeHtml(card.categoryName)}</p>
+      <p class="card-hint">${t("drill.categoryLabel", { categoryName: card.categoryName })}</p>
     `;
-    metaEl.textContent =
-      practiceInputMode === "type"
-        ? `Type the Spanish word for "${card.english}".`
-        : `Recall the Spanish word for "${card.english}", then reveal when ready.`;
   } else if (card.type === "verb_table" || card.type === "reflexive_table") {
     const label =
-      card.type === "reflexive_table" ? "Reflexive verb" : "Verb";
+      card.type === "reflexive_table" ? t("drill.reflexiveVerb") : t("drill.verb");
     cardEl.innerHTML = `
-      <p class="card-label">${label} · ${escapeHtml(card.tense.replace(/_/g, " "))}</p>
+      <p class="card-label">${label} · ${escapeHtml(tenseLabel)}</p>
       <p class="card-prompt">
-        <button type="button" class="verb-peek-trigger" disabled aria-label="View full conjugation table (available after answering)">
+        <button type="button" class="verb-peek-trigger" disabled aria-label="${escapeHtml(verbPeekAria)}">
           ${escapeHtml(card.infinitive)}
         </button>
       </p>
       <p class="card-hint">${escapeHtml(card.english)}</p>
     `;
-    metaEl.textContent =
-      practiceInputMode === "type"
-        ? `Type every selected pronoun for this verb${progressLine}.`
-        : `Conjugate all forms mentally, then reveal when ready${progressLine}.`;
 
     if (drillUi?.tableAnswerFields) {
+      const existingValues = new Map();
+      for (const input of drillUi.tableAnswerFields.querySelectorAll(".conjugation-table-input")) {
+        existingValues.set(input.dataset.pronoun, input.value);
+      }
+
       const rows = card.pronouns
         .map((pronoun) => {
           const stemHint = resolveStemHintMarkup(card, { pronoun });
@@ -326,6 +356,7 @@ export function renderDrillCard(
             autocomplete="off"
             autocapitalize="off"
             spellcheck="false"
+            value="${escapeHtml(existingValues.get(pronoun) ?? "")}"
           />
         </div>`;
         })
@@ -335,9 +366,9 @@ export function renderDrillCard(
   } else if (card.type === "reflexive") {
     const stemHint = resolveStemHintMarkup(card);
     cardEl.innerHTML = `
-      <p class="card-label">Reflexive verb · ${escapeHtml(card.tense.replace(/_/g, " "))}</p>
+      <p class="card-label">${t("drill.reflexiveVerb")} · ${escapeHtml(tenseLabel)}</p>
       <p class="card-prompt">
-        <button type="button" class="verb-peek-trigger" disabled aria-label="View full conjugation table (available after answering)">
+        <button type="button" class="verb-peek-trigger" disabled aria-label="${escapeHtml(verbPeekAria)}">
           ${escapeHtml(card.infinitive)}
         </button>
         · ${escapeHtml(pronounLabels[card.pronoun])}
@@ -345,23 +376,18 @@ export function renderDrillCard(
       <p class="card-hint">${escapeHtml(card.english)}</p>
       ${stemHint ? `<p class="card-stem-hint">${stemHint}</p>` : ""}
     `;
-    metaEl.textContent =
-      practiceInputMode === "type"
-        ? "Type the reflexive form (e.g. me lavo)." + progressLine
-        : "Conjugate with the reflexive pronoun mentally, then reveal when ready." +
-          progressLine;
 
     const dialectNote = getConjugationDialectNote(card.pronoun);
     if (dialectNote && dialectWarningEl) {
       dialectWarningEl.hidden = false;
-      dialectWarningEl.textContent = `Note: ${dialectNote}`;
+      dialectWarningEl.textContent = t("dialect.notePrefix", { message: dialectNote });
     }
   } else {
     const stemHint = resolveStemHintMarkup(card);
     cardEl.innerHTML = `
-      <p class="card-label">Verb · ${escapeHtml(card.tense.replace(/_/g, " "))}</p>
+      <p class="card-label">${t("drill.verb")} · ${escapeHtml(tenseLabel)}</p>
       <p class="card-prompt">
-        <button type="button" class="verb-peek-trigger" disabled aria-label="View full conjugation table (available after answering)">
+        <button type="button" class="verb-peek-trigger" disabled aria-label="${escapeHtml(verbPeekAria)}">
           ${escapeHtml(card.infinitive)}
         </button>
         · ${escapeHtml(pronounLabels[card.pronoun])}
@@ -369,19 +395,85 @@ export function renderDrillCard(
       <p class="card-hint">${escapeHtml(card.english)}</p>
       ${stemHint ? `<p class="card-stem-hint">${stemHint}</p>` : ""}
     `;
-    metaEl.textContent =
-      practiceInputMode === "type"
-        ? (card.note ?? "Type the conjugated form.") + progressLine
-        : (card.note ?? "Conjugate mentally, then reveal when ready.") + progressLine;
 
     const dialectNote = getConjugationDialectNote(card.pronoun);
     if (dialectNote && dialectWarningEl) {
       dialectWarningEl.hidden = false;
-      dialectWarningEl.textContent = `Note: ${dialectNote}`;
+      dialectWarningEl.textContent = t("dialect.notePrefix", { message: dialectNote });
     }
   }
 
-  return true;
+  metaEl.textContent = buildMetaText(card, practiceInputMode, deckProgress);
+}
+
+export function renderDrillCard(
+  cardEl,
+  metaEl,
+  dialectWarningEl,
+  card,
+  pronounLabels,
+  practiceInputMode = inputMode,
+  drillUi = null,
+  deckProgress = null
+) {
+  currentCard = card;
+  answerRevealed = false;
+  cardResolved = null;
+
+  lastDrillRenderContext = {
+    cardEl,
+    metaEl,
+    dialectWarningEl,
+    pronounLabels,
+    practiceInputMode,
+    drillUi,
+    deckProgress,
+  };
+
+  paintDrillCardChrome(
+    cardEl,
+    metaEl,
+    dialectWarningEl,
+    card,
+    pronounLabels,
+    practiceInputMode,
+    drillUi,
+    deckProgress
+  );
+
+  return Boolean(card);
+}
+
+export function relocalizeActiveDrill(ui) {
+  if (!lastDrillRenderContext) {
+    syncDrillActions(ui);
+    return;
+  }
+
+  const {
+    cardEl,
+    metaEl,
+    dialectWarningEl,
+    pronounLabels,
+    practiceInputMode,
+    drillUi,
+    deckProgress,
+  } = lastDrillRenderContext;
+
+  paintDrillCardChrome(
+    cardEl,
+    metaEl,
+    dialectWarningEl,
+    currentCard,
+    pronounLabels,
+    practiceInputMode,
+    drillUi ?? ui,
+    deckProgress
+  );
+
+  refreshVisibleFeedback(ui ?? drillUi);
+  syncDrillActions(ui ?? drillUi);
+  verbPeekSyncFn?.();
 }
 
 function resolveStemHintMarkup(card, { pronoun = null, answer = null } = {}) {
@@ -392,19 +484,128 @@ function resolveStemHintMarkup(card, { pronoun = null, answer = null } = {}) {
   const targetPronoun = pronoun ?? card.pronoun;
   const targetAnswer = answer ?? (pronoun ? card.answers?.[pronoun] : card.answer);
   const nosotrosAnswer = card.answers?.nosotros ?? card.referenceAnswer ?? null;
-  const label = getStemChangeHint(
+  const patternKey = getStemChangeHint(
     card.verbType,
     targetAnswer,
     targetPronoun,
     nosotrosAnswer
   );
-  const text = formatStemChangeHint(label);
+  const text = formatStemChangeHint(patternKey);
 
   if (!text) {
     return "";
   }
 
   return `<span class="stem-change-hint">${escapeHtml(text)}</span>`;
+}
+
+function feedbackMessage(tier, answer = null) {
+  if (tier === "exact") {
+    return t("feedback.exact");
+  }
+
+  if (tier === "accent") {
+    return answer ? `${t("feedback.accent")} ${answer}` : t("feedback.accent");
+  }
+
+  if (tier === "wrong") {
+    return t("feedback.wrong");
+  }
+
+  if (tier === "empty") {
+    return t("feedback.empty");
+  }
+
+  if (tier === "partial-exact") {
+    return t("feedback.partialExact");
+  }
+
+  if (tier === "partial-accent") {
+    return t("feedback.partialAccent");
+  }
+
+  return "";
+}
+
+function rowFeedbackMessage(rowTier, expected) {
+  if (rowTier === "exact") {
+    return t("feedback.rowExact");
+  }
+
+  if (rowTier === "accent") {
+    return t("feedback.rowAccent", { expected });
+  }
+
+  if (rowTier === "wrong") {
+    return t("feedback.rowWrong");
+  }
+
+  return "";
+}
+
+function tableSummaryFeedback(tier) {
+  if (tier === "partial-exact") {
+    return {
+      className: "is-correct",
+      message: t("feedback.partialExact"),
+    };
+  }
+
+  if (tier === "partial-accent") {
+    return {
+      className: "is-accent",
+      message: t("feedback.partialAccent"),
+    };
+  }
+
+  const feedback = ANSWER_FEEDBACK[tier];
+  return {
+    className: feedback?.className ?? "",
+    message: feedbackMessage(tier),
+  };
+}
+
+function refreshVisibleFeedback(ui) {
+  if (!ui?.feedbackEl || !currentCard) {
+    return;
+  }
+
+  if (cardResolved === "revealed") {
+    if (isTableDrillCard(currentCard)) {
+      for (const pronoun of currentCard.pronouns) {
+        const field = ui.tableAnswerFields?.querySelector(
+          `.conjugation-table-feedback[data-pronoun="${pronoun}"]`
+        );
+        if (field && !field.hidden) {
+          field.textContent = currentCard.answers[pronoun];
+        }
+      }
+    } else if (!ui.feedbackEl.hidden) {
+      ui.feedbackEl.textContent = t("drill.answerLabel", { answer: currentCard.answer });
+    }
+    return;
+  }
+
+  if (isTableDrillCard(currentCard)) {
+    const { rowResults, overallTier } = evaluateTableRows(ui, currentCard);
+    const hasRowFeedback = rowResults.some((row) => row.tier !== "skipped");
+
+    if (hasRowFeedback) {
+      applyTableFeedback(ui, overallTier, rowResults, { syncActions: false });
+    }
+    return;
+  }
+
+  if (cardResolved === "exact" || cardResolved === "accent") {
+    applyFeedback(ui, cardResolved, { syncActions: false });
+  } else if (!ui.feedbackEl.hidden && ui.feedbackEl.textContent) {
+    const tier = ui.feedbackEl.classList.contains("is-correct")
+      ? "exact"
+      : ui.feedbackEl.classList.contains("is-accent")
+        ? "accent"
+        : "wrong";
+    applyFeedback(ui, tier, { syncActions: false });
+  }
 }
 
 export function applyPracticeInputMode(practiceInputMode, ui) {
@@ -424,6 +625,17 @@ export function applyPracticeInputMode(practiceInputMode, ui) {
 
   if (ui.secondaryActionsEl) {
     ui.secondaryActionsEl.hidden = !isTypedPracticeMode();
+  }
+
+  if (lastDrillRenderContext) {
+    lastDrillRenderContext.practiceInputMode = inputMode;
+    if (currentCard && lastDrillRenderContext.metaEl) {
+      lastDrillRenderContext.metaEl.textContent = buildMetaText(
+        currentCard,
+        inputMode,
+        lastDrillRenderContext.deckProgress
+      );
+    }
   }
 
   syncDrillActions(ui);
@@ -510,41 +722,7 @@ function aggregateTableResults(filledTiers, filledCount, totalCount) {
   return "accent";
 }
 
-function rowFeedbackMessage(rowTier, expected) {
-  if (rowTier === "exact") {
-    return "Correct.";
-  }
-
-  if (rowTier === "accent") {
-    return `Check accent — ${expected}`;
-  }
-
-  if (rowTier === "wrong") {
-    return "Not quite — try again.";
-  }
-
-  return "";
-}
-
-function tableSummaryFeedback(tier) {
-  if (tier === "partial-exact") {
-    return {
-      className: "is-correct",
-      message: "Good so far — fill in the rest, or reveal.",
-    };
-  }
-
-  if (tier === "partial-accent") {
-    return {
-      className: "is-accent",
-      message: "Good so far — fix accents or fill in the rest.",
-    };
-  }
-
-  return ANSWER_FEEDBACK[tier];
-}
-
-function applyTableFeedback(ui, tier, rowResults) {
+function applyTableFeedback(ui, tier, rowResults, { syncActions = true } = {}) {
   const { feedbackEl } = ui;
 
   for (const { pronoun, tier: rowTier, expected } of rowResults) {
@@ -587,43 +765,44 @@ function applyTableFeedback(ui, tier, rowResults) {
     feedbackEl.textContent = "";
   }
 
-  if (tier === "wrong") {
-    cardResolved = null;
-    recordResultIfTracking(currentMode, "wrong");
-  } else if (tier === "exact") {
-    cardResolved = "exact";
-    recordResultIfTracking(currentMode, "exact");
-  } else if (tier === "accent") {
-    cardResolved = "accent";
-    recordResultIfTracking(currentMode, "accent");
-  } else {
-    cardResolved = null;
-  }
+  if (syncActions) {
+    if (tier === "wrong") {
+      cardResolved = null;
+      recordResultIfTracking(currentMode, "wrong");
+    } else if (tier === "exact") {
+      cardResolved = "exact";
+      recordResultIfTracking(currentMode, "exact");
+    } else if (tier === "accent") {
+      cardResolved = "accent";
+      recordResultIfTracking(currentMode, "accent");
+    } else {
+      cardResolved = null;
+    }
 
-  syncDrillActions(ui);
-  updateStatsDisplay();
+    syncDrillActions(ui);
+    updateStatsDisplay();
+  }
 }
 
-function applyFeedback(ui, tier) {
-  const { feedbackEl, answerInput } = ui;
+function applyFeedback(ui, tier, { syncActions = true } = {}) {
+  const { feedbackEl } = ui;
   const feedback = ANSWER_FEEDBACK[tier];
   feedbackEl.hidden = false;
   feedbackEl.className = `answer-feedback ${feedback.className}`;
+  feedbackEl.textContent = feedbackMessage(tier, tier === "accent" ? currentCard.answer : null);
 
-  if (tier === "accent") {
-    feedbackEl.textContent = `${feedback.message} ${currentCard.answer}`;
-    cardResolved = "accent";
-    recordResultIfTracking(currentMode, "accent");
-  } else if (tier === "exact") {
-    feedbackEl.textContent = feedback.message;
-    cardResolved = "exact";
-    recordResultIfTracking(currentMode, "exact");
-  } else {
-    feedbackEl.textContent = feedback.message;
+  if (syncActions) {
+    if (tier === "accent") {
+      cardResolved = "accent";
+      recordResultIfTracking(currentMode, "accent");
+    } else if (tier === "exact") {
+      cardResolved = "exact";
+      recordResultIfTracking(currentMode, "exact");
+    }
+
+    syncDrillActions(ui);
+    updateStatsDisplay();
   }
-
-  syncDrillActions(ui);
-  updateStatsDisplay();
 }
 
 export function checkTypedAnswer(ui) {
@@ -683,7 +862,7 @@ export function revealAnswer(ui) {
     ui.feedbackEl.hidden = false;
     ui.feedbackEl.classList.remove("is-correct", "is-accent", "is-incorrect");
     ui.feedbackEl.classList.add("is-revealed");
-    ui.feedbackEl.textContent = `Answer: ${currentCard.answer}`;
+    ui.feedbackEl.textContent = t("drill.answerLabel", { answer: currentCard.answer });
   }
 
   if (cardResolved !== "revealed") {
@@ -791,41 +970,45 @@ export function escapeHtml(value) {
     .replaceAll('"', "&quot;");
 }
 
-export const VERB_TYPES = [
-  { id: "regular_ar", label: "Regular -ar" },
-  { id: "regular_er", label: "Regular -er" },
-  { id: "regular_ir", label: "Regular -ir" },
-  { id: "stem_changer_e_ie", label: "Stem-changing (e → ie)" },
-  { id: "stem_changer_o_ue", label: "Stem-changing (o → ue)" },
-  { id: "stem_changer_e_i", label: "Stem-changing (e → i)" },
-  { id: "irregular", label: "Irregular" },
-  { id: "unknown", label: "Unknown / draft" },
-];
+export function getVerbTypes() {
+  return [
+    { id: "regular_ar", label: t("verbType.regular_ar") },
+    { id: "regular_er", label: t("verbType.regular_er") },
+    { id: "regular_ir", label: t("verbType.regular_ir") },
+    { id: "stem_changer_e_ie", label: t("verbType.stem_changer_e_ie") },
+    { id: "stem_changer_o_ue", label: t("verbType.stem_changer_o_ue") },
+    { id: "stem_changer_e_i", label: t("verbType.stem_changer_e_i") },
+    { id: "irregular", label: t("verbType.irregular") },
+    { id: "unknown", label: t("verbType.unknown") },
+  ];
+}
 
-/** Simplified conjugation settings groups (each maps to one or more VERB_TYPES ids). */
-export const VERB_TYPE_GROUPS = [
-  {
-    id: "regular",
-    label: "Regular (-ar, -er, -ir)",
-    types: ["regular_ar", "regular_er", "regular_ir"],
-  },
-  {
-    id: "stem_changing",
-    label: "Stem-changing",
-    types: ["stem_changer_e_ie", "stem_changer_o_ue", "stem_changer_e_i"],
-  },
-  { id: "irregular", label: "Irregular", types: ["irregular"] },
-  { id: "unknown", label: "Unknown / draft", types: ["unknown"] },
-];
+/** Simplified conjugation settings groups (each maps to one or more verb type ids). */
+export function getVerbTypeGroups() {
+  return [
+    {
+      id: "regular",
+      label: t("verbTypeGroup.regular"),
+      types: ["regular_ar", "regular_er", "regular_ir"],
+    },
+    {
+      id: "stem_changing",
+      label: t("verbTypeGroup.stem_changing"),
+      types: ["stem_changer_e_ie", "stem_changer_o_ue", "stem_changer_e_i"],
+    },
+    { id: "irregular", label: t("verbTypeGroup.irregular"), types: ["irregular"] },
+    { id: "unknown", label: t("verbTypeGroup.unknown"), types: ["unknown"] },
+  ];
+}
 
 export function allVerbTypeIds() {
-  return VERB_TYPES.map((type) => type.id);
+  return getVerbTypes().map((type) => type.id);
 }
 
 export function expandVerbTypeGroups(selectedGroupIds) {
   const types = [];
 
-  for (const group of VERB_TYPE_GROUPS) {
+  for (const group of getVerbTypeGroups()) {
     if (selectedGroupIds.includes(group.id)) {
       types.push(...group.types);
     }
@@ -838,14 +1021,18 @@ export function expandVerbTypeGroups(selectedGroupIds) {
 export function verbTypesToGroupSelection(typeIds) {
   const selected = new Set(typeIds ?? []);
 
-  return VERB_TYPE_GROUPS.filter((group) =>
-    group.types.some((typeId) => selected.has(typeId))
-  ).map((group) => group.id);
+  return getVerbTypeGroups()
+    .filter((group) => group.types.some((typeId) => selected.has(typeId)))
+    .map((group) => group.id);
 }
 
-export const TENSE_OPTIONS = [{ id: "present_tense", label: "Present tense" }];
+export function getTenseOptions() {
+  return [{ id: "present_tense", label: t("tense.present_tense") }];
+}
 
-export const PRACTICE_INPUT_MODES = [
-  { id: "type", label: "Type answers (recommended)" },
-  { id: "reveal", label: "Reveal only (no typing, no stats)" },
-];
+export function getPracticeInputModes() {
+  return [
+    { id: "type", label: t("settings.inputModeType") },
+    { id: "reveal", label: t("settings.inputModeReveal") },
+  ];
+}

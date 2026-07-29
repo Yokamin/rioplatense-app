@@ -9,92 +9,94 @@
   <body>
     <main class="app">
       <header>
-        <p class="back-link"><a id="back-link" href="index.html">← Home</a></p>
-        <h1>Reference</h1>
-        <p class="subtitle">Short notes on verb types used in this app</p>
+        <div class="header-top">
+          <div id="locale-toggle"></div>
+        </div>
+        <p class="back-link"><a id="back-link" href="index.html" data-i18n="nav.home">← Home</a></p>
+        <h1 data-i18n="page.reference.heading">Reference</h1>
+        <p class="subtitle" data-i18n="page.reference.subtitle">Short notes on verb types used in this app</p>
       </header>
 
       <section class="panel">
-        <h2 class="panel-title">Verb frequency tiers</h2>
-        <p>
-          Curated verbs in <code>data/verbs.json</code> use a <strong>frequency</strong> field:
-          <strong>core</strong> (essential — ser, ir, hacer…),
-          <strong>common</strong> (everyday — hablar, comer, trabajar…), and
-          <strong>extended</strong> (useful but more situational — bailar, cocinar, viajar…).
+        <h2 class="panel-title" data-i18n="reference.frequency.title">Verb frequency tiers</h2>
+        <p data-i18n="reference.frequency.body1">
+          Curated verbs in data/verbs.json use a frequency field: core (essential — ser, ir, hacer…), common (everyday — hablar, comer, trabajar…), and extended (useful but more situational — bailar, cocinar, viajar…).
         </p>
-        <p class="field-hint">
-          Conjugation settings offer quick picks for core only or core + common. Only verbs with complete
-          present-tense conjugations appear in drills.
+        <p class="field-hint" data-i18n="reference.frequency.hint">
+          Conjugation settings offer quick picks for core only or core + common. Only verbs with complete present-tense conjugations appear in drills.
         </p>
       </section>
 
       <section class="panel">
-        <h2 class="panel-title">Regular verbs</h2>
-        <p>
-          Follow predictable endings in present tense: <strong>-ar</strong>, <strong>-er</strong>, <strong>-ir</strong>.
-          Rioplatense <em>vos</em> forms keep the stress pattern you are learning in class (e.g. <em>hablás</em>, <em>comés</em>, <em>vivís</em>).
+        <h2 class="panel-title" data-i18n="reference.regular.title">Regular verbs</h2>
+        <p data-i18n="reference.regular.body">
+          Follow predictable endings in present tense: -ar, -er, -ir. Rioplatense vos forms keep the stress pattern you are learning in class (e.g. hablás, comés, vivís).
         </p>
       </section>
 
       <section class="panel">
-        <h2 class="panel-title">Stem-changing verbs (*Verbos con cambio de raíz*)</h2>
-        <p>The vowel in the stem changes in most forms, but often <strong>not</strong> in <em>nosotros</em> / <em>vosotros</em>.</p>
-        <ul class="reference-list">
-          <li><strong>e → ie</strong> (e.g. <em>tener → tengo / tenés</em>, <em>querer → quiero / querés</em>)</li>
-          <li><strong>o → ue</strong> (e.g. <em>poder → puedo / podés</em>, <em>volver → vuelvo / volvés</em>)</li>
-          <li><strong>e → i</strong> (e.g. <em>pedir → pido / pedís</em>)</li>
-        </ul>
-        <p class="field-hint">Internal app label examples: <code>stem_changer_e_ie</code>, <code>stem_changer_o_ue</code>, <code>stem_changer_e_i</code>.</p>
-      </section>
-
-      <section class="panel">
-        <h2 class="panel-title">Irregular verbs</h2>
-        <p>
-          Do not follow the regular pattern cleanly (e.g. <em>ser</em>, <em>ir</em>, <em>hacer</em>, <em>decir</em>).
-          Often high-frequency — worth drilling early even though each one is unique.
-        </p>
-      </section>
-
-      <section class="panel">
-        <h2 class="panel-title">Reflexive verbs (*Verbos reflexivos*)</h2>
-        <p>
-          The action reflects back on the subject. You need a <strong>reflexive pronoun</strong> before the conjugated verb.
-          Reflexive Practice drills the full form (e.g. <em>me lavo</em>, not just <em>lavo</em>).
+        <h2 class="panel-title" data-i18n="reference.stemChanging.title">Stem-changing verbs (*Verbos con cambio de raíz*)</h2>
+        <p data-i18n="reference.stemChanging.intro">
+          The vowel in the stem changes in most forms, but often not in nosotros / vosotros.
         </p>
         <ul class="reference-list">
-          <li><strong>yo</strong> → <em>me</em> (me lavo)</li>
-          <li><strong>vos / tú</strong> → <em>te</em> (te lavás / te lavas)</li>
-          <li><strong>él / ella / usted</strong> → <em>se</em> (se lava) — yes, third person uses <em>se</em></li>
-          <li><strong>nosotros</strong> → <em>nos</em> (nos lavamos)</li>
-          <li><strong>vosotros</strong> → <em>os</em> (os laváis)</li>
-          <li><strong>ustedes / ellos / ellas</strong> → <em>se</em> (se lavan)</li>
+          <li data-i18n="reference.stemChanging.e_ie">e → ie (e.g. tener → tengo / tenés, querer → quiero / querés)</li>
+          <li data-i18n="reference.stemChanging.o_ue">o → ue (e.g. poder → puedo / podés, volver → vuelvo / volvés)</li>
+          <li data-i18n="reference.stemChanging.e_i">e → i (e.g. pedir → pido / pedís)</li>
         </ul>
-        <p>
-          <strong>Not reflexive:</strong> <em>lavo el auto</em> (I wash the car — direct object, no pronoun).
-          <strong>Reflexive:</strong> <em>me lavo</em> (I wash myself).
-          Same verb, different meaning — the pronoun is what makes it reflexive.
-        </p>
-        <p class="field-hint">
-          Common exam routine verbs: <em>despertarse, levantarse, ducharse, vestirse, acostarse…</em>
-          Use Reflexive Practice for these; Conjugation Practice excludes them on purpose.
+        <p class="field-hint" data-i18n="reference.stemChanging.hint">
+          Internal app label examples: stem_changer_e_ie, stem_changer_o_ue, stem_changer_e_i.
         </p>
       </section>
 
       <section class="panel">
-        <h2 class="panel-title">Rioplatense note</h2>
-        <p>
-          Active practice defaults to <em>vos</em>. Forms like <em>tú</em> and <em>vosotros</em> are kept for recognition
-          (understand them when reading or listening elsewhere), but are flagged as not typical for active use in Argentina.
+        <h2 class="panel-title" data-i18n="reference.irregular.title">Irregular verbs</h2>
+        <p data-i18n="reference.irregular.body">
+          Do not follow the regular pattern cleanly (e.g. ser, ir, hacer, decir). Often high-frequency — worth drilling early even though each one is unique.
+        </p>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title" data-i18n="reference.reflexive.title">Reflexive verbs (*Verbos reflexivos*)</h2>
+        <p data-i18n="reference.reflexive.intro">
+          The action reflects back on the subject. You need a reflexive pronoun before the conjugated verb. Reflexive Practice drills the full form (e.g. me lavo, not just lavo).
+        </p>
+        <ul class="reference-list">
+          <li data-i18n="reference.reflexive.yo">yo → me (me lavo)</li>
+          <li data-i18n="reference.reflexive.vosTu">vos / tú → te (te lavás / te lavas)</li>
+          <li data-i18n="reference.reflexive.el">él / ella / usted → se (se lava) — yes, third person uses se</li>
+          <li data-i18n="reference.reflexive.nosotros">nosotros → nos (nos lavamos)</li>
+          <li data-i18n="reference.reflexive.vosotros">vosotros → os (os laváis)</li>
+          <li data-i18n="reference.reflexive.ustedes">ustedes / ellos / ellas → se (se lavan)</li>
+        </ul>
+        <p data-i18n="reference.reflexive.notReflexive">
+          Not reflexive: lavo el auto (I wash the car — direct object, no pronoun).
+        </p>
+        <p data-i18n="reference.reflexive.isReflexive">
+          Reflexive: me lavo (I wash myself). Same verb, different meaning — the pronoun is what makes it reflexive.
+        </p>
+        <p class="field-hint" data-i18n="reference.reflexive.hint">
+          Common exam routine verbs: despertarse, levantarse, ducharse, vestirse, acostarse… Use Reflexive Practice for these; Conjugation Practice excludes them on purpose.
+        </p>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title" data-i18n="reference.rioplatense.title">Rioplatense note</h2>
+        <p data-i18n="reference.rioplatense.body">
+          Active practice defaults to vos. Forms like tú and vosotros are kept for recognition (understand them when reading or listening elsewhere), but are flagged as not typical for active use in Argentina.
         </p>
       </section>
     </main>
 
     <script type="module">
       import { initSmartBackLink } from "./src/navigation.js";
+      import { setupPageLocale } from "./src/page-locale.js";
+
+      setupPageLocale({ titleKey: "page.title.reference" });
 
       initSmartBackLink(document.getElementById("back-link"), {
         fallbackHref: "index.html",
-        fallbackLabel: "← Home",
+        fallbackLabelKey: "nav.home",
       });
     </script>
   </body>

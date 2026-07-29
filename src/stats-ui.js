@@ -1,3 +1,4 @@
+import { t } from "./i18n/index.js";
 import {
   formatCompactCounts,
   getDailyStats,
@@ -17,15 +18,15 @@ export function buildStatsDetailHtml(mode, modeLabel) {
   const daily = getDailyStats(mode, 14);
 
   const countRows = (counts) => `
-    <tr><td>Exact (green)</td><td>${counts.exact}</td></tr>
-    <tr><td>Accent only (yellow)</td><td>${counts.accent}</td></tr>
-    <tr><td>Incorrect (red)</td><td>${counts.wrong}</td></tr>
-    <tr><td>Revealed (needed help)</td><td>${counts.revealed}</td></tr>
+    <tr><td>${t("stats.rowExact")}</td><td>${counts.exact}</td></tr>
+    <tr><td>${t("stats.rowAccent")}</td><td>${counts.accent}</td></tr>
+    <tr><td>${t("stats.rowWrong")}</td><td>${counts.wrong}</td></tr>
+    <tr><td>${t("stats.rowRevealed")}</td><td>${counts.revealed}</td></tr>
   `;
 
   const dailyRows =
     daily.length === 0
-      ? `<tr><td colspan="5">No daily history yet.</td></tr>`
+      ? `<tr><td colspan="5">${t("stats.noDailyHistory")}</td></tr>`
       : daily
           .map(
             ({ date, counts }) => `
@@ -40,34 +41,34 @@ export function buildStatsDetailHtml(mode, modeLabel) {
           .join("");
 
   return `
-    <h2 id="stats-modal-title">${modeLabel} stats</h2>
-    <p class="field-hint">✓ exact · ~ accent · ✗ wrong · reveal = needed help</p>
+    <h2 id="stats-modal-title">${t("stats.modalTitle", { modeLabel })}</h2>
+    <p class="field-hint">${t("stats.legend")}</p>
 
-    <h3>This session</h3>
+    <h3>${t("stats.thisSession")}</h3>
     <table class="stats-table">
       <tbody>${countRows(session)}</tbody>
     </table>
 
-    <h3>All time</h3>
+    <h3>${t("stats.allTime")}</h3>
     <table class="stats-table">
       <tbody>${countRows(lifetime)}</tbody>
     </table>
 
-    <h3>Recent days</h3>
+    <h3>${t("stats.recentDays")}</h3>
     <table class="stats-table">
       <thead>
         <tr>
-          <th>Date</th>
+          <th>${t("stats.dateHeader")}</th>
           <th>✓</th>
           <th>~</th>
           <th>✗</th>
-          <th>Reveal</th>
+          <th>${t("stats.revealHeader")}</th>
         </tr>
       </thead>
       <tbody>${dailyRows}</tbody>
     </table>
 
-    <button type="button" id="stats-reset" class="secondary-action stats-reset">Reset ${modeLabel.toLowerCase()} stats</button>
+    <button type="button" id="stats-reset" class="secondary-action stats-reset">${t("stats.resetButton", { modeLabel })}</button>
   `;
 }
 
@@ -82,9 +83,9 @@ export function initStatsUi({
 }) {
   function refreshChip() {
     toggleEl.innerHTML = `
-      <span class="stats-chip-title">Stats</span>
+      <span class="stats-chip-title">${t("stats.chipTitle")}</span>
       <span class="stats-chip-values">${formatStatsChip(mode)}</span>
-      <span class="stats-chip-hint">Tap for details</span>
+      <span class="stats-chip-hint">${t("stats.chipHint")}</span>
     `;
   }
 
@@ -102,7 +103,7 @@ export function initStatsUi({
       return;
     }
 
-    if (!confirm(`Reset all ${modeLabel.toLowerCase()} stats (session + history)?`)) {
+    if (!confirm(t("stats.resetConfirm", { modeLabel }))) {
       return;
     }
 

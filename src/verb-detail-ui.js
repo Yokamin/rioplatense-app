@@ -1,14 +1,13 @@
 import { PRONOUN_CARD_LABELS, PRONOUN_KEYS } from "./data-loader.js";
-import { VERB_FREQUENCY_LABELS, getVerbFrequency } from "./verb-frequency.js";
-import { TYPE_EXPLANATIONS, getVerbTypeBadge } from "./verb-type-info.js";
+import { getFrequencyBadgeLabel, getVerbFrequency } from "./verb-frequency.js";
+import { getTypeExplanation, getVerbTypeBadge } from "./verb-type-info.js";
 import { escapeHtml } from "./ui-helpers.js";
-
-const TENSE_LABELS = {
-  present_tense: "Present tense",
-};
+import { t } from "./i18n/index.js";
 
 function formatTenseLabel(tenseId) {
-  return TENSE_LABELS[tenseId] ?? tenseId.replace(/_/g, " ");
+  const key = `tense.${tenseId}`;
+  const label = t(key);
+  return label.startsWith("⟦missing:") ? tenseId.replace(/_/g, " ") : label;
 }
 
 function getTenseKeys(verb) {
@@ -26,13 +25,8 @@ function getTenseKeys(verb) {
 function buildTypeTagsHtml(type) {
   const badge = getVerbTypeBadge(type);
   const explanation =
-    TYPE_EXPLANATIONS[badge.category] ??
-    (badge.category === "unknown"
-      ? {
-          title: "Draft entry",
-          body: "This verb is not fully categorized yet. It may be missing conjugations for drills.",
-        }
-      : null);
+    getTypeExplanation(badge.category) ??
+    (badge.category === "unknown" ? getTypeExplanation("unknown") : null);
 
   if (!explanation) {
     return `<span class="type-tag">${escapeHtml(badge.label)}</span>`;
@@ -75,12 +69,12 @@ function buildConjugationTableHtml(tenseMap, highlightPronoun = null) {
  * @param {{ tense?: string, pronoun?: string }|null} highlight - row to highlight after a drill
  */
 export function buildVerbDetailHtml(verb, highlight = null) {
-  const frequency = VERB_FREQUENCY_LABELS[getVerbFrequency(verb)] ?? "";
+  const frequency = getFrequencyBadgeLabel(getVerbFrequency(verb));
   const tenseKeys = getTenseKeys(verb);
 
   const tenseSections =
     tenseKeys.length === 0
-      ? `<p class="field-hint">No conjugation tables stored for this verb yet.</p>`
+      ? `<p class="field-hint">${t("verbDetail.noConjugations")}</p>`
       : tenseKeys
           .map((tenseId) => {
             const highlightPronoun =

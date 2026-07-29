@@ -2,11 +2,13 @@ import { loadAllData } from "./data-loader.js";
 import { initVerbDetailModal } from "./verb-detail-modal.js";
 import {
   VERB_FREQUENCY_ORDER,
-  VERB_FREQUENCY_SECTIONS,
+  getFrequencySectionLabel,
   getVerbFrequency,
 } from "./verb-frequency.js";
 import { getVerbTypeBadge } from "./verb-type-info.js";
 import { escapeHtml, getFileProtocolHint } from "./ui-helpers.js";
+import { t } from "./i18n/index.js";
+import { setupPageLocale } from "./page-locale.js";
 import { initSmartBackLink } from "./navigation.js";
 
 const searchInput = document.getElementById("verb-search");
@@ -19,6 +21,7 @@ const detailClose = document.getElementById("verb-detail-close");
 let verbs = [];
 let verbDetailModal = null;
 let activeFilter = "all";
+let backLinkRefresh = null;
 
 function matchesFilter(verb) {
   if (activeFilter === "reflexive") {
@@ -49,6 +52,18 @@ function matchesSearch(verb, query) {
   return haystack.includes(query);
 }
 
+function filterLabelKey() {
+  if (activeFilter === "reflexive") {
+    return "verbs.filterLabelReflexive";
+  }
+
+  if (activeFilter === "non-reflexive") {
+    return "verbs.filterLabelNonReflexive";
+  }
+
+  return "verbs.filterLabelTotal";
+}
+
 function renderVerbList(query = "") {
   const normalizedQuery = query.trim().toLowerCase();
   listEl.innerHTML = "";
@@ -68,7 +83,7 @@ function renderVerbList(query = "") {
 
     const heading = document.createElement("h2");
     heading.className = "verb-list-tier";
-    heading.textContent = VERB_FREQUENCY_SECTIONS[tier];
+    heading.textContent = getFrequencySectionLabel(tier);
     listEl.appendChild(heading);
 
     const grid = document.createElement("div");
@@ -90,13 +105,13 @@ function renderVerbList(query = "") {
           <span class="type-tag type-tag-compact">${escapeHtml(badge.label)}</span>
           ${
             verb.is_reflexive
-              ? '<span class="type-tag type-tag-compact type-tag-reflexive">reflexive</span>'
+              ? `<span class="type-tag type-tag-compact type-tag-reflexive">${t("verbs.reflexiveTag")}</span>`
               : ""
           }
           ${
             complete
               ? ""
-              : '<span class="verb-list-incomplete">incomplete table</span>'
+              : `<span class="verb-list-incomplete">${t("verbs.incompleteTable")}</span>`
           }
         </span>
       `;
@@ -107,20 +122,20 @@ function renderVerbList(query = "") {
   }
 
   const totalReflexive = verbs.filter((verb) => verb.is_reflexive).length;
-  const filterLabel =
-    activeFilter === "reflexive"
-      ? "reflexive"
-      : activeFilter === "non-reflexive"
-        ? "non-reflexive"
-        : "total";
+  const filterLabel = t(filterLabelKey());
+  const pluralSuffix = visibleCount === 1 ? "" : "s";
 
   statusEl.textContent =
     visibleCount === 0
-      ? "No verbs match your search."
-      : `${visibleCount} ${filterLabel} verb${visibleCount === 1 ? "" : "s"} shown` +
-        (activeFilter === "all"
-          ? ` (${totalReflexive} reflexive · ${verbs.length - totalReflexive} non-reflexive)`
-          : "");
+      ? t("verbs.noMatch")
+      : activeFilter === "all"
+        ? t("verbs.shownCountAll", {
+            visibleCount,
+            pluralSuffix,
+            reflexiveCount: totalReflexive,
+            nonReflexiveCount: verbs.length - totalReflexive,
+          })
+        : t("verbs.shownCount", { visibleCount, filterLabel, pluralSuffix });
 }
 
 function setActiveFilter(filter) {
@@ -143,11 +158,6 @@ function openVerbByInfinitive(infinitive) {
 }
 
 async function init() {
-  initSmartBackLink(document.getElementById("back-link"), {
-    fallbackHref: "index.html",
-    fallbackLabel: "← Home",
-  });
-
   try {
     verbDetailModal = initVerbDetailModal({
       modalEl: detailModal,
@@ -177,9 +187,24 @@ async function init() {
       });
     }
   } catch (error) {
-    statusEl.textContent = `Failed to load verbs: ${error.message}.${getFileProtocolHint()}`;
+    statusEl.textContent = t("verbs.loadFailed", {
+      message: error.message,
+      fileProtocolHint: getFileProtocolHint(),
+    });
     statusEl.classList.add("error");
   }
 }
+
+setupPageLocale({
+  titleKey: "page.title.verbs",
+  onChange: () => {
+    backLinkRefresh?.();
+    renderVerbList(searchInput.value);
+  },
+});
+
+backLinkRefresh = initSmartBackLink(document.getElementById("back-link"), {
+  fallbackHref: "index.html",
+}).refresh;
 
 init();

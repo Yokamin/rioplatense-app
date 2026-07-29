@@ -1,8 +1,10 @@
-/** Short stem-change labels shown during conjugation drills. */
-const STEM_PATTERN_LABELS = {
-  stem_changer_e_ie: "e → ie",
-  stem_changer_o_ue: "o → ue",
-  stem_changer_e_i: "e → i",
+import { t } from "./i18n/index.js";
+
+/** Short stem-change pattern keys shown during conjugation drills. */
+const STEM_PATTERN_KEYS = {
+  stem_changer_e_ie: "e_ie",
+  stem_changer_o_ue: "o_ue",
+  stem_changer_e_i: "e_i",
 };
 
 const E_I_HINT_PRONOUNS = new Set(["yo", "tu", "el", "ustedes"]);
@@ -26,7 +28,7 @@ function usesEiStemChange(answerPart, nosotrosPart) {
 }
 
 /**
- * Return a short hint when this specific form uses a stem change.
+ * Return a pattern key when this specific form uses a stem change.
  * Uses the expected answer so vos/nosotros unchanged forms stay silent.
  */
 export function getStemChangeHint(verbType, answer, pronoun, nosotrosAnswer = null) {
@@ -34,8 +36,8 @@ export function getStemChangeHint(verbType, answer, pronoun, nosotrosAnswer = nu
     return null;
   }
 
-  const label = STEM_PATTERN_LABELS[verbType];
-  if (!label) {
+  const patternKey = STEM_PATTERN_KEYS[verbType];
+  if (!patternKey) {
     return null;
   }
 
@@ -43,11 +45,11 @@ export function getStemChangeHint(verbType, answer, pronoun, nosotrosAnswer = nu
   const nosotrosPart = nosotrosAnswer ? stripReflexivePronoun(nosotrosAnswer) : null;
 
   if (verbType === "stem_changer_e_ie" && /ie/i.test(answerPart)) {
-    return label;
+    return patternKey;
   }
 
   if (verbType === "stem_changer_o_ue" && /ue/i.test(answerPart)) {
-    return label;
+    return patternKey;
   }
 
   if (verbType === "stem_changer_e_i") {
@@ -56,13 +58,18 @@ export function getStemChangeHint(verbType, answer, pronoun, nosotrosAnswer = nu
     }
 
     if (usesEiStemChange(answerPart, nosotrosPart)) {
-      return label;
+      return patternKey;
     }
   }
 
   return null;
 }
 
-export function formatStemChangeHint(label) {
-  return label ? `Stem change: ${label}` : null;
+export function formatStemChangeHint(patternKey) {
+  if (!patternKey) {
+    return null;
+  }
+
+  const pattern = t(`stemHint.pattern.${patternKey}`);
+  return t("stemHint.label", { pattern });
 }

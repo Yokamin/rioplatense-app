@@ -9,9 +9,12 @@
   <body>
     <main class="app">
       <header>
-        <p class="back-link"><a id="back-link" href="index.html">← Home</a></p>
-        <h1>Exam Practice</h1>
-        <p class="subtitle">Dated snapshots for focused prep — same drills, exam-scoped content.</p>
+        <div class="header-top">
+          <div id="locale-toggle"></div>
+        </div>
+        <p class="back-link"><a id="back-link" href="index.html" data-i18n="nav.home">← Home</a></p>
+        <h1 data-i18n="page.exam.heading">Exam Practice</h1>
+        <p class="subtitle" data-i18n="page.exam.subtitle">Dated snapshots for focused prep — same drills, exam-scoped content.</p>
       </header>
 
       <p id="exam-status" class="status error" hidden></p>

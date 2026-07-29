@@ -9,91 +9,94 @@
   <body>
     <main class="app">
       <header>
-        <p class="back-link"><a id="back-link" href="index.html">← Home</a></p>
-        <h1 id="page-title">Reflexive Practice</h1>
+        <div class="header-top">
+          <div id="locale-toggle"></div>
+        </div>
+        <p class="back-link"><a id="back-link" href="index.html" data-i18n="nav.home">← Home</a></p>
+        <h1 id="page-title" data-i18n="page.reflexive.heading">Reflexive Practice</h1>
         <p id="exam-scope-banner" class="exam-scope-banner" hidden></p>
       </header>
 
       <div id="settings-overlay" class="settings-overlay">
         <section class="settings-dialog" aria-labelledby="reflexive-settings-title">
-          <h2 id="reflexive-settings-title">Session settings</h2>
-          <p id="settings-intro" class="field-hint">
+          <h2 id="reflexive-settings-title" data-i18n="settings.sessionTitle">Session settings</h2>
+          <p id="settings-intro" class="field-hint" data-i18n="settings.reflexiveIntro">
             Practice daily-routine reflexives. Answers include the pronoun (e.g. me lavo).
           </p>
 
           <fieldset class="fieldset">
-            <legend>Drill format</legend>
+            <legend data-i18n="settings.drillFormatLegend">Drill format</legend>
             <div class="radio-group">
               <label class="radio-label">
                 <input type="radio" name="drill-style" value="per_verb" checked />
-                Per verb (all selected pronouns at once)
+                <span data-i18n="settings.drillFormatPerVerb">Per verb (all selected pronouns at once)</span>
               </label>
               <label class="radio-label">
                 <input type="radio" name="drill-style" value="single" />
-                Single form (one pronoun per card)
+                <span data-i18n="settings.drillFormatSingle">Single form (one pronoun per card)</span>
               </label>
             </div>
           </fieldset>
 
           <fieldset class="fieldset">
-            <legend>Card order</legend>
+            <legend data-i18n="settings.cardOrderLegend">Card order</legend>
             <div class="radio-group">
               <label class="radio-label">
                 <input type="radio" name="card-order" value="deck" checked />
-                Cover all before repeat (recommended)
+                <span data-i18n="settings.cardOrderDeck">Cover all before repeat (recommended)</span>
               </label>
               <label class="radio-label">
                 <input type="radio" name="card-order" value="random" />
-                Random (may repeat the same verb)
+                <span data-i18n="settings.cardOrderRandom">Random (may repeat the same verb)</span>
               </label>
             </div>
           </fieldset>
 
           <fieldset class="fieldset">
-            <legend>Practice style</legend>
+            <legend data-i18n="settings.practiceStyleLegend">Practice style</legend>
             <div class="radio-group">
               <label class="radio-label">
                 <input type="radio" name="input-mode" value="type" checked />
-                Type answers (recommended)
+                <span data-i18n="settings.inputModeType">Type answers (recommended)</span>
               </label>
               <label class="radio-label">
                 <input type="radio" name="input-mode" value="reveal" />
-                Reveal only (no typing, no stats)
+                <span data-i18n="settings.inputModeReveal">Reveal only (no typing, no stats)</span>
               </label>
             </div>
           </fieldset>
 
           <fieldset class="fieldset">
-            <legend>Learning aids</legend>
+            <legend data-i18n="settings.learningAidsLegend">Learning aids</legend>
             <label class="checkbox-label">
               <input type="checkbox" name="stem-hints" checked />
-              Show stem-change hints (e → ie, o → ue, e → i)
+              <span data-i18n="settings.stemHintsLabel">Show stem-change hints (e → ie, o → ue, e → i)</span>
             </label>
-            <p class="field-hint">
-              When a form uses a stem change, a short reminder appears on the card (e.g. <em>me siento</em>, not
-              <em>me sento</em>). Vos forms like <em>te sentás</em> stay silent because they keep the regular stem.
+            <p class="field-hint" data-i18n="settings.stemHintsHintReflexive">
+              When a form uses a stem change, a short reminder appears on the card (e.g. me siento, not me sento). Vos forms like te sentás stay silent because they keep the regular stem.
             </p>
           </fieldset>
 
           <div class="field">
-            <label for="tense">Tense</label>
+            <label for="tense" data-i18n="settings.tenseLabel">Tense</label>
             <select id="tense"></select>
           </div>
 
           <details class="fieldset collapsible">
-            <summary>Pronouns</summary>
+            <summary data-i18n="settings.pronounsSummary">Pronouns</summary>
             <div id="pronoun-filters" class="checkbox-grid"></div>
           </details>
 
           <fieldset class="fieldset">
-            <legend>Specific verbs (optional)</legend>
-            <p class="field-hint">Leave all selected to drill every reflexive verb in scope.</p>
+            <legend data-i18n="settings.specificVerbsLegend">Specific verbs (optional)</legend>
+            <p class="field-hint" data-i18n="settings.specificVerbsHintReflexive">Leave all selected to drill every reflexive verb in scope.</p>
             <button
               type="button"
               id="verb-picker-toggle"
               class="picker-toggle secondary-action"
               aria-expanded="false"
               aria-controls="verb-picker-modal"
+              data-i18n="verbPicker.allVerbs"
             >
               All verbs
             </button>
@@ -108,26 +111,26 @@
             aria-labelledby="verb-picker-title"
           >
             <section class="modal-dialog modal-dialog-wide">
-              <h2 id="verb-picker-title">Choose reflexive verbs</h2>
+              <h2 id="verb-picker-title" data-i18n="verbPicker.chooseReflexiveVerbs">Choose reflexive verbs</h2>
               <div class="picker-toolbar">
-                <button type="button" id="verb-select-core" class="secondary-action">Core only</button>
-                <button type="button" id="verb-select-common" class="secondary-action">Core + common</button>
-                <button type="button" id="verb-select-all" class="secondary-action">Select all</button>
-                <button type="button" id="verb-clear-all" class="secondary-action">Clear all</button>
+                <button type="button" id="verb-select-core" class="secondary-action" data-i18n="verbPicker.coreOnly">Core only</button>
+                <button type="button" id="verb-select-common" class="secondary-action" data-i18n="verbPicker.coreCommon">Core + common</button>
+                <button type="button" id="verb-select-all" class="secondary-action" data-i18n="verbPicker.selectAll">Select all</button>
+                <button type="button" id="verb-clear-all" class="secondary-action" data-i18n="verbPicker.clearAll">Clear all</button>
               </div>
               <div id="verb-filters" class="picker-scroll verb-picker-list"></div>
-              <button type="button" id="verb-picker-done" class="primary-action">Done</button>
+              <button type="button" id="verb-picker-done" class="primary-action" data-i18n="verbPicker.done">Done</button>
             </section>
           </div>
 
-          <button type="button" id="start-practice" class="primary-action">Start practice</button>
+          <button type="button" id="start-practice" class="primary-action" data-i18n="settings.startPractice">Start practice</button>
         </section>
       </div>
 
       <div id="drill-session" hidden>
         <div id="session-bar" class="session-bar">
           <button type="button" id="stats-toggle" class="stats-chip" aria-haspopup="dialog"></button>
-          <button type="button" id="change-settings" class="secondary-action">Change settings</button>
+          <button type="button" id="change-settings" class="secondary-action" data-i18n="settings.changeSettings">Change settings</button>
         </div>
 
         <p id="dialect-warning" class="dialect-warning" hidden></p>
@@ -136,7 +139,7 @@
 
         <form id="answer-form" class="answer-form">
           <div id="single-answer-row" class="single-answer-row">
-            <label for="answer-input">Your answer</label>
+            <label for="answer-input" data-i18n="drill.yourAnswer">Your answer</label>
             <input id="answer-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" />
           </div>
         </form>
@@ -145,9 +148,9 @@
         <p id="answer-feedback" class="answer-feedback" hidden aria-live="polite"></p>
 
         <div class="drill-actions">
-          <button type="button" id="primary-action" class="primary-action" data-action="check">Check</button>
+          <button type="button" id="primary-action" class="primary-action" data-action="check" data-i18n="drill.check">Check</button>
           <div id="secondary-actions" class="secondary-actions">
-            <button type="button" id="reveal-answer" class="secondary-action">Reveal Answer</button>
+            <button type="button" id="reveal-answer" class="secondary-action" data-i18n="drill.revealAnswer">Reveal Answer</button>
           </div>
         </div>
       </div>
@@ -162,14 +165,14 @@
       >
         <section class="modal-dialog modal-dialog-wide">
           <div id="verb-detail-body"></div>
-          <button type="button" id="verb-detail-close" class="primary-action">Close</button>
+          <button type="button" id="verb-detail-close" class="primary-action" data-i18n="settings.close">Close</button>
         </section>
       </div>
 
       <div id="stats-modal" class="modal-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="stats-modal-title">
         <section class="modal-dialog">
           <div id="stats-modal-body"></div>
-          <button type="button" id="stats-modal-close" class="primary-action">Close</button>
+          <button type="button" id="stats-modal-close" class="primary-action" data-i18n="settings.close">Close</button>
         </section>
       </div>
     </main>

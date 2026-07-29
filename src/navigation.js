@@ -1,17 +1,23 @@
+import { t } from "./i18n/index.js";
+
 /**
  * Use browser history when the user arrived from another page in this app;
  * otherwise fall back to a sensible default link.
  */
 export function initSmartBackLink(
   linkEl,
-  { fallbackHref = "index.html", fallbackLabel = "← Home" } = {}
+  { fallbackHref = "index.html", fallbackLabelKey = "nav.home" } = {}
 ) {
   if (!linkEl) {
-    return;
+    return { refresh: () => {} };
   }
 
-  linkEl.href = fallbackHref;
-  linkEl.textContent = fallbackLabel;
+  function refresh() {
+    linkEl.href = fallbackHref;
+    linkEl.textContent = t(fallbackLabelKey);
+  }
+
+  refresh();
 
   linkEl.addEventListener("click", (event) => {
     const referrer = document.referrer;
@@ -37,4 +43,6 @@ export function initSmartBackLink(
       // Keep default href navigation.
     }
   });
+
+  return { refresh };
 }

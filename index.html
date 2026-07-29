@@ -9,43 +9,48 @@
   <body>
     <main class="app">
       <header>
-        <h1>Rioplatense Practice</h1>
-        <nav class="tools-bar" aria-label="Tools">
+        <div class="header-top">
+          <div id="locale-toggle"></div>
+        </div>
+        <h1 data-i18n="home.title">Rioplatense Practice</h1>
+        <nav class="tools-bar" data-i18n-aria="nav.toolsAria">
           <!-- Card Creator hidden for now — page kept at card-creator.html; not used on phone. Re-enable when adding data via UI again. -->
-          <a class="tool-link" href="verbs.html">Verb Lookup</a>
-          <a class="tool-link" href="reference.html">Reference</a>
+          <a class="tool-link" href="verbs.html" data-i18n="nav.verbLookup">Verb Lookup</a>
+          <a class="tool-link" href="reference.html" data-i18n="nav.reference">Reference</a>
         </nav>
       </header>
 
       <section class="home-section" aria-labelledby="practice-heading">
-        <h2 id="practice-heading" class="home-section-title">Practice</h2>
-        <p class="home-section-intro">Pick a drill.</p>
-        <nav class="mode-nav" aria-label="Practice drills">
+        <h2 id="practice-heading" class="home-section-title" data-i18n="home.practiceHeading">Practice</h2>
+        <p class="home-section-intro" data-i18n="home.practiceIntro">Pick a drill.</p>
+        <nav class="mode-nav" data-i18n-aria="nav.practiceDrillsAria">
           <a class="mode-card" href="conjugation.html">
-            <h3>Conjugation Practice</h3>
-            <p>Drill verb forms by tense, type, and pronoun.</p>
+            <h3 data-i18n="home.conjugationTitle">Conjugation Practice</h3>
+            <p data-i18n="home.conjugationDesc">Drill verb forms by tense, type, and pronoun.</p>
           </a>
           <a class="mode-card" href="reflexive.html">
-            <h3>Reflexive Practice</h3>
-            <p>Daily routine reflexives — type answers like me lavo.</p>
+            <h3 data-i18n="home.reflexiveTitle">Reflexive Practice</h3>
+            <p data-i18n="home.reflexiveDesc">Daily routine reflexives — type answers like me lavo.</p>
           </a>
           <a class="mode-card" href="vocab.html">
-            <h3>Vocabulary Recall</h3>
-            <p>Recall Spanish from English — frequencies, emotions, family, modismos, and more.</p>
+            <h3 data-i18n="home.vocabTitle">Vocabulary Recall</h3>
+            <p data-i18n="home.vocabDesc">Recall Spanish from English — frequencies, emotions, family, modismos, and more.</p>
           </a>
         </nav>
       </section>
 
       <section class="home-section" aria-labelledby="exam-heading">
-        <h2 id="exam-heading" class="home-section-title">Exam prep</h2>
-        <p class="home-section-intro">Scoped drills for a specific exam date.</p>
-        <nav class="mode-nav" aria-label="Exam practice">
+        <h2 id="exam-heading" class="home-section-title" data-i18n="home.examHeading">Exam prep</h2>
+        <p class="home-section-intro" data-i18n="home.examIntro">Scoped drills for a specific exam date.</p>
+        <nav class="mode-nav" data-i18n-aria="nav.examPracticeAria">
           <a class="mode-card" href="exam.html">
-            <h3>Exam Practice</h3>
-            <p>Irregular, regular tiers, reflexives — limited to your exam snapshot.</p>
+            <h3 data-i18n="home.examTitle">Exam Practice</h3>
+            <p data-i18n="home.examDesc">Irregular, regular tiers, reflexives — limited to your exam snapshot.</p>
           </a>
         </nav>
       </section>
     </main>
+
+    <script type="module" src="src/home.js"></script>
   </body>
 </html>

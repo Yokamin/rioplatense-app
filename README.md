@@ -81,9 +81,14 @@ Verbs need a complete 7-pronoun map for a tense to appear in conjugation drills.
 - `data/vocab.json`, `data/verbs.json`, `data/exams/*.json`
 - No npm, no bundler
 
+## UI languages
+
+The app supports **EN | ES** for all UI chrome (buttons, settings, instructions, feedback). Use the toggle in the page header; your choice is saved in the browser. Spanish learning content (verb forms, vocabulary) stays Spanish either way.
+
+When changing UI strings, add keys to both `src/i18n/en.js` and `src/i18n/es.js`, then run `node scripts/check-i18n.js`.
+
 ## Roadmap (brief)
 
-- UI locale pack (English / Spanish chrome) — planned
 - Richer conjugation feedback (explain errors before showing fixes)
 - Past tenses when ready
 - Optional PWA / add-to-home-screen polish

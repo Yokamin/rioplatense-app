@@ -3,6 +3,8 @@ import {
   buildExamReflexiveUrl,
   loadExamCatalog,
 } from "./exam-loader.js";
+import { t } from "./i18n/index.js";
+import { setupPageLocale } from "./page-locale.js";
 import { getFileProtocolHint } from "./ui-helpers.js";
 import { initSmartBackLink } from "./navigation.js";
 
@@ -10,10 +12,8 @@ const examListEl = document.getElementById("exam-list");
 const statusEl = document.getElementById("exam-status");
 const backLinkEl = document.getElementById("back-link");
 
-initSmartBackLink(backLinkEl, {
-  fallbackHref: "index.html",
-  fallbackLabel: "← Home",
-});
+let backLinkRefresh = null;
+let cachedExams = [];
 
 function renderExam(exam) {
   const section = document.createElement("section");
@@ -28,26 +28,28 @@ function renderExam(exam) {
   if (exam.date) {
     const dateLine = document.createElement("p");
     dateLine.className = "exam-date";
-    dateLine.textContent = `Exam date: ${exam.date}`;
+    dateLine.textContent = t("exam.dateLine", { date: exam.date });
     section.appendChild(dateLine);
   }
 
   const intro = document.createElement("p");
   intro.className = "exam-intro";
-  intro.textContent =
-    "Scoped drills use the same engines as main practice, limited to this exam snapshot.";
+  intro.textContent = t("exam.intro");
   section.appendChild(intro);
 
   const conjugationBlock = document.createElement("div");
   conjugationBlock.className = "exam-block";
 
   const conjugationTitle = document.createElement("h3");
-  conjugationTitle.textContent = "Conjugation";
+  conjugationTitle.textContent = t("exam.conjugation");
   conjugationBlock.appendChild(conjugationTitle);
 
   const nav = document.createElement("nav");
   nav.className = "mode-nav";
-  nav.setAttribute("aria-label", `${exam.label} conjugation drills`);
+  nav.setAttribute(
+    "aria-label",
+    t("exam.conjugationDrillsAria", { examLabel: exam.label })
+  );
 
   for (const preset of exam.conjugation?.presets ?? []) {
     const link = document.createElement("a");
@@ -56,7 +58,7 @@ function renderExam(exam) {
     link.innerHTML = `
       <h2>${preset.label}</h2>
       <p>${preset.description}</p>
-      <p class="exam-card-meta">${preset.infinitives.length} verbs</p>
+      <p class="exam-card-meta">${t("exam.verbCount", { count: preset.infinitives.length })}</p>
     `;
     nav.appendChild(link);
   }
@@ -68,12 +70,15 @@ function renderExam(exam) {
   reflexiveBlock.className = "exam-block";
 
   const reflexiveTitle = document.createElement("h3");
-  reflexiveTitle.textContent = "Reflexives";
+  reflexiveTitle.textContent = t("exam.reflexives");
   reflexiveBlock.appendChild(reflexiveTitle);
 
   const reflexiveNav = document.createElement("nav");
   reflexiveNav.className = "mode-nav";
-  reflexiveNav.setAttribute("aria-label", `${exam.label} reflexive drills`);
+  reflexiveNav.setAttribute(
+    "aria-label",
+    t("exam.reflexiveDrillsAria", { examLabel: exam.label })
+  );
 
   if (exam.reflexives?.available) {
     const link = document.createElement("a");
@@ -82,15 +87,15 @@ function renderExam(exam) {
     link.innerHTML = `
       <h2>${exam.reflexives.label}</h2>
       <p>${exam.reflexives.description}</p>
-      <p class="exam-card-meta">${exam.reflexives.infinitives.length} verbs</p>
+      <p class="exam-card-meta">${t("exam.verbCount", { count: exam.reflexives.infinitives.length })}</p>
     `;
     reflexiveNav.appendChild(link);
   } else {
     const reflexiveCard = document.createElement("div");
     reflexiveCard.className = "mode-card mode-card-static is-disabled";
     reflexiveCard.innerHTML = `
-      <h2>Reflexive Practice</h2>
-      <p>${exam.reflexives?.note ?? "Coming soon."}</p>
+      <h2>${t("exam.reflexiveTitle")}</h2>
+      <p>${exam.reflexives?.note ?? t("exam.comingSoon")}</p>
     `;
     reflexiveNav.appendChild(reflexiveCard);
   }
@@ -101,25 +106,46 @@ function renderExam(exam) {
   return section;
 }
 
-async function init() {
-  try {
-    const exams = await loadExamCatalog();
-    examListEl.innerHTML = "";
+function renderExamList() {
+  examListEl.innerHTML = "";
 
-    if (exams.length === 0) {
-      statusEl.hidden = false;
-      statusEl.textContent = "No exam snapshots are configured yet.";
-      return;
-    }
-
-    for (const exam of exams) {
-      examListEl.appendChild(renderExam(exam));
-    }
-  } catch (error) {
+  if (cachedExams.length === 0) {
     statusEl.hidden = false;
-    statusEl.classList.add("error");
-    statusEl.textContent = `Could not load exams: ${error.message}.${getFileProtocolHint()}`;
+    statusEl.classList.remove("error");
+    statusEl.textContent = t("exam.noSnapshots");
+    return;
+  }
+
+  statusEl.hidden = true;
+  for (const exam of cachedExams) {
+    examListEl.appendChild(renderExam(exam));
   }
 }
 
-init();
+async function loadExams() {
+  try {
+    cachedExams = await loadExamCatalog();
+    renderExamList();
+  } catch (error) {
+    statusEl.hidden = false;
+    statusEl.classList.add("error");
+    statusEl.textContent = t("exam.loadFailed", {
+      message: error.message,
+      fileProtocolHint: getFileProtocolHint(),
+    });
+  }
+}
+
+setupPageLocale({
+  titleKey: "page.title.exam",
+  onChange: () => {
+    backLinkRefresh?.();
+    renderExamList();
+  },
+});
+
+backLinkRefresh = initSmartBackLink(backLinkEl, {
+  fallbackHref: "index.html",
+}).refresh;
+
+loadExams();

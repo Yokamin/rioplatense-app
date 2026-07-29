@@ -35,20 +35,8 @@ export function evaluateAnswer(userInput, expected) {
 }
 
 export const ANSWER_FEEDBACK = {
-  exact: {
-    className: "is-correct",
-    message: "Correct.",
-  },
-  accent: {
-    className: "is-accent",
-    message: "Right word — check the accent(s). Full answer:",
-  },
-  wrong: {
-    className: "is-incorrect",
-    message: "Not quite — try again, or reveal the answer.",
-  },
-  empty: {
-    className: "is-incorrect",
-    message: "Type an answer first.",
-  },
+  exact: { className: "is-correct" },
+  accent: { className: "is-accent" },
+  wrong: { className: "is-incorrect" },
+  empty: { className: "is-incorrect" },
 };

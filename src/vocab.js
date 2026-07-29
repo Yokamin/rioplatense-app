@@ -8,6 +8,8 @@ import {
   savePracticeSettings,
   SETTINGS_KEYS,
 } from "./settings-storage.js";
+import { t } from "./i18n/index.js";
+import { setupPageLocale } from "./page-locale.js";
 import { initStatsUi } from "./stats-ui.js";
 import { resetSessionStats } from "./stats-storage.js";
 import {
@@ -19,6 +21,7 @@ import {
   hideSettingsOverlay,
   initDrillActionHandlers,
   populateCheckboxGroup,
+  relocalizeActiveDrill,
   renderDrillCard,
   resetAnswerUi,
   setCheckedValues,
@@ -56,6 +59,7 @@ const DEFAULT_SETTINGS = {
 let vocab = null;
 let activeSettings = loadPracticeSettings(SETTINGS_KEYS.vocab, DEFAULT_SETTINGS);
 let statsUi = null;
+let backLinkRefresh = null;
 
 const drillUi = {
   answerForm,
@@ -169,18 +173,23 @@ function beginSession() {
   showNextCard();
 }
 
+function refreshLocalizedUi() {
+  relocalizeActiveDrill(drillUi);
+  statsUi?.refreshChip();
+  backLinkRefresh?.();
+}
+
 async function init() {
-  initSmartBackLink(document.getElementById("back-link"), {
+  backLinkRefresh = initSmartBackLink(document.getElementById("back-link"), {
     fallbackHref: "index.html",
-    fallbackLabel: "← Home",
-  });
+  }).refresh;
 
   try {
     resetSessionStats("vocab");
 
     statsUi = initStatsUi({
       mode: "vocab",
-      modeLabel: "Vocabulary",
+      modeLabel: t("stats.modeVocab"),
       toggleEl: statsToggle,
       modalEl: statsModal,
       modalBodyEl: statsModalBody,
@@ -206,7 +215,10 @@ async function init() {
     startBtn.disabled = true;
     startBtn.insertAdjacentText(
       "beforebegin",
-      `Data load failed: ${error.message}.${getFileProtocolHint()}`
+      t("error.dataLoadFailed", {
+        message: error.message,
+        fileProtocolHint: getFileProtocolHint(),
+      })
     );
   }
 }
@@ -215,6 +227,11 @@ startBtn.addEventListener("click", beginSession);
 changeSettingsBtn.addEventListener("click", () => {
   applySettingsToForm(activeSettings);
   showSettingsOverlay(overlayEl, sessionEl);
+});
+
+setupPageLocale({
+  titleKey: "page.title.vocab",
+  onChange: refreshLocalizedUi,
 });
 
 init();
