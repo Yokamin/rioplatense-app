@@ -61,11 +61,11 @@ When generating learning materials, drill prompts, or instructional feedback in 
    - Respect the user's learning curve by prioritizing foundational clarity over overwhelming advanced edge cases.
 3. **UI language**:
    - **Learning data** (verb forms, vocab Spanish, conjugation tables) stays Spanish regardless of UI locale.
-   - **UI chrome** (buttons, settings, instructions, stats, exam hub labels) uses EN/ES packs via `t("key")` on the **`feature/i18n`** branch — see **Internationalization** below. **`main`** (live Pages) stays English-only until that branch is merged.
+   - **UI chrome** (buttons, settings, instructions, stats, exam hub labels) uses EN/ES packs via `t("key")` — see **Internationalization** below.
 
 ---
 
-## 🌐 Internationalization (`feature/i18n` — not yet on `main`)
+## 🌐 Internationalization
 
 - **Locale files**: `src/i18n/en.js`, `src/i18n/es.js` — parallel key → string maps (**306 keys**).
 - **API**: `src/i18n/index.js` — `t(key, params?)`, `setLocale("en"|"es")`, `getLocale()`, `applyDocumentI18n()`, `initLocaleToggle()`.
@@ -124,7 +124,7 @@ Verb entries contain base metadata and one or more **tense objects**, each holdi
 - [ ] Richer pedagogical feedback (explain error type before correction).
 
 ### Phase 3: Polish & Expansion
-- [x] UI locale pack (EN/ES) — **`feature/i18n`** pushed; merge to `main` when convenient (live Pages unchanged until then)
+- [x] UI locale pack (EN/ES) — shipped on `main` (`ec32783`)
 - [ ] Additional tenses (e.g. preterite) via new tense keys on verb objects.
 - [ ] Mobile PWA (manifest, icons, offline shell).
 
@@ -170,8 +170,6 @@ Verb entries contain base metadata and one or more **tense objects**, each holdi
 
 Static hosting only. See root **`README.md`** for GitHub Pages steps. Requires HTTP(S)—`fetch` does not work from `file://`.
 
-**Branches:** `main` → GitHub Pages (English UI). `feature/i18n` → full EN/ES UI for local testing; merge when ready.
-
 ---
 
 ## 📓 Development log
@@ -180,4 +178,5 @@ Static hosting only. See root **`README.md`** for GitHub Pages steps. Requires H
 |------|--------|-------|
 | 2026-07-20 | `main` | v1 shipped: conjugation, vocab, card creator, lookup, reference, stats. |
 | 2026-07-29 | `main` | v2 baseline (`88506d0`): exam hub, reflexives, per-verb drills, stem hints, expanded data. |
-| 2026-07-29 | `feature/i18n` | Full UI locale pack (306 keys), flag toggle, exam/vocab metadata i18n, live stats/card refresh on locale change; vocab card render fix (`formatTenseLabel` when `tense` absent). Branch pushed; **not merged** to `main` so live training stays English-only until author merges. |
+| 2026-07-29 | `feature/i18n` | Full UI locale pack (306 keys), flag toggle, exam/vocab metadata i18n, live stats/card refresh; vocab card render fix. |
+| 2026-07-29 | `main` | Merged `feature/i18n` → `main` (`ec32783`); EN/ES UI live on GitHub Pages. |

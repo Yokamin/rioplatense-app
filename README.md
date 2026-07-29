@@ -83,9 +83,7 @@ Verbs need a complete 7-pronoun map for a tense to appear in conjugation drills.
 
 ## UI languages
 
-On the **`feature/i18n`** branch, the app supports **EN | ES** for all UI chrome (buttons, settings, stats, exam hub cards, vocab category names in settings, instructions, feedback). Use the **GB / AR flag toggle** in the page header; your choice is saved in the browser (`localStorage` key `rioplatense-locale`). Spanish learning content (verb forms, vocabulary) stays Spanish either way.
-
-**Live GitHub Pages** (`main`) is still English-only until that branch is merged — you can keep training on Pages and test locale locally on `feature/i18n`.
+The app supports **EN | ES** for all UI chrome (buttons, settings, stats, exam hub cards, vocab category names in settings, instructions, feedback). Use the **GB / AR flag toggle** in the page header; your choice is saved in the browser (`localStorage` key `rioplatense-locale`). Spanish learning content (verb forms, vocabulary) stays Spanish either way.
 
 When changing UI strings, add keys to both `src/i18n/en.js` and `src/i18n/es.js`, then run:
 
