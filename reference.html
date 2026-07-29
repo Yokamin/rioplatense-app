@@ -88,16 +88,6 @@
       </section>
     </main>
 
-    <script type="module">
-      import { initSmartBackLink } from "./src/navigation.js";
-      import { setupPageLocale } from "./src/page-locale.js";
-
-      setupPageLocale({ titleKey: "page.title.reference" });
-
-      initSmartBackLink(document.getElementById("back-link"), {
-        fallbackHref: "index.html",
-        fallbackLabelKey: "nav.home",
-      });
-    </script>
+    <script type="module" src="src/reference.js"></script>
   </body>
 </html>

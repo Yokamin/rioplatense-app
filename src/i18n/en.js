@@ -1,6 +1,8 @@
 export const messages = {
   // locale
   "locale.switchAria": "Switch language",
+  "locale.englishAria": "English interface (UI language)",
+  "locale.spanishAria": "Spanish interface (UI language)",
 
   // nav
   "nav.home": "← Home",
@@ -239,6 +241,35 @@ export const messages = {
   "exam.loadFailed": "Could not load exams: {message}.{fileProtocolHint}",
   "exam.conjugationDrillsAria": "{examLabel} conjugation drills",
   "exam.reflexiveDrillsAria": "{examLabel} reflexive drills",
+  "exam.snapshot.exam_2026_07_30.label": "Exam 30-Jul-26",
+  "exam.preset.priority_irregular.label": "Irregular & stem-changers",
+  "exam.preset.priority_irregular.description":
+    "Thursday focus: ser, estar, tener, hacer, ir, venir, decir, poner, ver, querer, poder, salir, dormir, cerrar, empezar, pedir.",
+  "exam.preset.regular_common.label": "Regular (common)",
+  "exam.preset.regular_common.description":
+    "Short cross-section of everyday -ar, -er, and -ir verbs.",
+  "exam.preset.regular_full.label": "Regular (full class list)",
+  "exam.preset.regular_full.description":
+    "All section 1.1 regular verbs from class (present tense).",
+  "exam.snapshot.exam_2026_07_30.reflexives.label": "Daily routine reflexives",
+  "exam.snapshot.exam_2026_07_30.reflexives.description":
+    "Picture + class routine reflexives: wake up, shower, get dressed, go to bed, and more.",
+
+  // vocab categories
+  "vocab.category.days_of_week": "Days of the Week",
+  "vocab.category.months_of_year": "Months of the Year",
+  "vocab.category.frecuencias": "Frequency & Habit",
+  "vocab.category.emociones": "Emotions & Physical States",
+  "vocab.category.numeros": "Numbers",
+  "vocab.category.estaciones": "Seasons",
+  "vocab.category.fechas_ejemplo": "Date & Time Examples",
+  "vocab.category.habitaciones_y_areas": "Rooms & Areas",
+  "vocab.category.familia": "Family",
+  "vocab.category.adverbios_lugar": "Place Adverbs",
+  "vocab.category.positional": "Position & Direction",
+  "vocab.category.modismos": "Argentinian Modisms",
+  "vocab.category.general": "General Words",
+  "drill.vocabEnglishCue": "English",
 
   // verbs
   "verbs.filterAria": "Verb list filter",

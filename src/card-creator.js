@@ -15,6 +15,7 @@ import {
   slugifyCategoryId,
 } from "./draft-storage.js";
 import { t } from "./i18n/index.js";
+import { tVocabCategoryName } from "./localized-data.js";
 import { setupPageLocale } from "./page-locale.js";
 import { getFileProtocolHint, getVerbTypes, setStatus } from "./ui-helpers.js";
 import { initSmartBackLink } from "./navigation.js";
@@ -45,7 +46,7 @@ function populateCategorySelect(vocab) {
   for (const category of listVocabCategories(vocab)) {
     const option = document.createElement("option");
     option.value = category.id;
-    option.textContent = `${category.displayName} (${category.itemCount})`;
+    option.textContent = `${tVocabCategoryName(category.id, category.displayName)} (${category.itemCount})`;
     vocabCategorySelect.appendChild(option);
   }
 }
@@ -116,6 +117,9 @@ async function reloadMergedData() {
 
 function refreshLocalizedUi() {
   populateVerbTypeSelect();
+  if (mergedVocab) {
+    populateCategorySelect(mergedVocab);
+  }
   renderDraftSummary();
   backLinkRefresh?.();
 }

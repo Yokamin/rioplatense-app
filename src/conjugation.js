@@ -19,6 +19,10 @@ import {
   examConjugationSettingsKey,
 } from "./settings-storage.js";
 import { t } from "./i18n/index.js";
+import {
+  tExamPresetLabel,
+  tExamSnapshotLabel,
+} from "./localized-data.js";
 import { setupPageLocale } from "./page-locale.js";
 import { initStatsUi } from "./stats-ui.js";
 import { resetSessionStats } from "./stats-storage.js";
@@ -362,11 +366,13 @@ function configureExamChrome() {
     return;
   }
 
-  document.title = `${examPreset.label} · ${examContext.label}`;
-  pageTitleEl.textContent = examContext.label;
+  const examLabel = tExamSnapshotLabel(examContext);
+  const presetLabel = tExamPresetLabel(examPreset);
+  document.title = `${presetLabel} · ${examLabel}`;
+  pageTitleEl.textContent = examLabel;
   examScopeBannerEl.hidden = false;
   examScopeBannerEl.textContent = t("drill.examScopeBanner", {
-    presetLabel: examPreset.label,
+    presetLabel,
     count: scopedInfinitives.length,
   });
   settingsIntroEl.textContent = t("settings.examConjugationIntro");
@@ -435,7 +441,7 @@ function refreshLocalizedUi() {
   );
   verbPicker?.refreshLabels();
   relocalizeActiveDrill(drillUi);
-  statsUi?.refreshChip();
+  statsUi?.refreshLocalized();
   if (isExamMode && examContext && examPreset) {
     configureExamChrome();
   } else {
@@ -449,7 +455,7 @@ async function init() {
 
     statsUi = initStatsUi({
       mode: "conjugation",
-      modeLabel: t("stats.modeConjugation"),
+      modeLabelKey: "stats.modeConjugation",
       toggleEl: statsToggle,
       modalEl: statsModal,
       modalBodyEl: statsModalBody,

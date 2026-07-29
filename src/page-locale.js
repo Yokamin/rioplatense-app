@@ -21,20 +21,23 @@ export function setupPageLocale({ onChange, titleKey } = {}) {
     document.title = t(titleKey);
   }
 
-  if (onChange) {
-    onLocaleChange(() => {
-      applyDocumentI18n();
-      if (titleKey) {
-        document.title = t(titleKey);
-      }
-      onChange();
-    });
-  } else {
-    onLocaleChange(() => {
-      applyDocumentI18n();
-      if (titleKey) {
-        document.title = t(titleKey);
-      }
-    });
-  }
+  const refreshPageLocale = () => {
+    applyDocumentI18n();
+    if (titleKey) {
+      document.title = t(titleKey);
+    }
+    onChange?.();
+  };
+
+  onLocaleChange(refreshPageLocale);
+
+  window.addEventListener("pageshow", (event) => {
+    if (!event.persisted) {
+      return;
+    }
+
+    initLocale();
+    initLocaleToggle(toggleHost);
+    refreshPageLocale();
+  });
 }

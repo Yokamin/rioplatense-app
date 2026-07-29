@@ -9,6 +9,7 @@ import {
   SETTINGS_KEYS,
 } from "./settings-storage.js";
 import { t } from "./i18n/index.js";
+import { tVocabCategoryName } from "./localized-data.js";
 import { setupPageLocale } from "./page-locale.js";
 import { initStatsUi } from "./stats-ui.js";
 import { resetSessionStats } from "./stats-storage.js";
@@ -138,6 +139,11 @@ function showNextCard() {
   }
 }
 
+function categoryFilterLabel(category) {
+  const name = tVocabCategoryName(category.id, category.displayName);
+  return `${name} (${category.itemCount})`;
+}
+
 function populateCategoryFilters() {
   const categories = getAvailableCategories();
 
@@ -145,7 +151,7 @@ function populateCategoryFilters() {
     categoryFilters,
     categories.map((category) => ({
       id: category.id,
-      label: `${category.displayName} (${category.itemCount})`,
+      label: categoryFilterLabel(category),
     })),
     "category",
     activeSettings.categoryIds.length > 0
@@ -174,8 +180,15 @@ function beginSession() {
 }
 
 function refreshLocalizedUi() {
-  relocalizeActiveDrill(drillUi);
-  statsUi?.refreshChip();
+  if (sessionEl.hidden) {
+    populateCategoryFilters();
+    applySettingsToForm(activeSettings);
+  }
+  try {
+    relocalizeActiveDrill(drillUi);
+  } finally {
+    statsUi?.refreshLocalized();
+  }
   backLinkRefresh?.();
 }
 
@@ -189,7 +202,7 @@ async function init() {
 
     statsUi = initStatsUi({
       mode: "vocab",
-      modeLabel: t("stats.modeVocab"),
+      modeLabelKey: "stats.modeVocab",
       toggleEl: statsToggle,
       modalEl: statsModal,
       modalBodyEl: statsModalBody,

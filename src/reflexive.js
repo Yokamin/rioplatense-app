@@ -24,6 +24,10 @@ import {
   SETTINGS_KEYS,
 } from "./settings-storage.js";
 import { t } from "./i18n/index.js";
+import {
+  tExamReflexivesLabel,
+  tExamSnapshotLabel,
+} from "./localized-data.js";
 import { setupPageLocale } from "./page-locale.js";
 import { initStatsUi } from "./stats-ui.js";
 import { resetSessionStats } from "./stats-storage.js";
@@ -343,11 +347,13 @@ function configureExamChrome() {
     return;
   }
 
-  document.title = `${examReflexives.label} · ${examContext.label}`;
-  pageTitleEl.textContent = examContext.label;
+  const examLabel = tExamSnapshotLabel(examContext);
+  const presetLabel = tExamReflexivesLabel(examContext, examReflexives);
+  document.title = `${presetLabel} · ${examLabel}`;
+  pageTitleEl.textContent = examLabel;
   examScopeBannerEl.hidden = false;
   examScopeBannerEl.textContent = t("drill.examScopeBanner", {
-    presetLabel: examReflexives.label,
+    presetLabel,
     count: scopedInfinitives.length,
   });
   settingsIntroEl.textContent = t("settings.examReflexiveIntro");
@@ -406,7 +412,7 @@ function refreshLocalizedUi() {
   );
   verbPicker?.refreshLabels();
   relocalizeActiveDrill(drillUi);
-  statsUi?.refreshChip();
+  statsUi?.refreshLocalized();
   if (isExamMode && examContext && examReflexives) {
     configureExamChrome();
   } else {
@@ -420,7 +426,7 @@ async function init() {
 
     statsUi = initStatsUi({
       mode: "reflexive",
-      modeLabel: t("stats.modeReflexive"),
+      modeLabelKey: "stats.modeReflexive",
       toggleEl: statsToggle,
       modalEl: statsModal,
       modalBodyEl: statsModalBody,

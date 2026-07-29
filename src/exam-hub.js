@@ -4,6 +4,13 @@ import {
   loadExamCatalog,
 } from "./exam-loader.js";
 import { t } from "./i18n/index.js";
+import {
+  tExamPresetDescription,
+  tExamPresetLabel,
+  tExamReflexivesDescription,
+  tExamReflexivesLabel,
+  tExamSnapshotLabel,
+} from "./localized-data.js";
 import { setupPageLocale } from "./page-locale.js";
 import { getFileProtocolHint } from "./ui-helpers.js";
 import { initSmartBackLink } from "./navigation.js";
@@ -16,13 +23,14 @@ let backLinkRefresh = null;
 let cachedExams = [];
 
 function renderExam(exam) {
+  const examLabel = tExamSnapshotLabel(exam);
   const section = document.createElement("section");
   section.className = "exam-section";
   section.setAttribute("aria-labelledby", `exam-${exam.id}-title`);
 
   const heading = document.createElement("h2");
   heading.id = `exam-${exam.id}-title`;
-  heading.textContent = exam.label;
+  heading.textContent = examLabel;
   section.appendChild(heading);
 
   if (exam.date) {
@@ -48,16 +56,18 @@ function renderExam(exam) {
   nav.className = "mode-nav";
   nav.setAttribute(
     "aria-label",
-    t("exam.conjugationDrillsAria", { examLabel: exam.label })
+    t("exam.conjugationDrillsAria", { examLabel })
   );
 
   for (const preset of exam.conjugation?.presets ?? []) {
+    const presetLabel = tExamPresetLabel(preset);
+    const presetDescription = tExamPresetDescription(preset);
     const link = document.createElement("a");
     link.className = "mode-card";
     link.href = buildExamConjugationUrl(exam.id, preset.id);
     link.innerHTML = `
-      <h2>${preset.label}</h2>
-      <p>${preset.description}</p>
+      <h2>${presetLabel}</h2>
+      <p>${presetDescription}</p>
       <p class="exam-card-meta">${t("exam.verbCount", { count: preset.infinitives.length })}</p>
     `;
     nav.appendChild(link);
@@ -77,16 +87,18 @@ function renderExam(exam) {
   reflexiveNav.className = "mode-nav";
   reflexiveNav.setAttribute(
     "aria-label",
-    t("exam.reflexiveDrillsAria", { examLabel: exam.label })
+    t("exam.reflexiveDrillsAria", { examLabel })
   );
 
   if (exam.reflexives?.available) {
+    const reflexiveLabel = tExamReflexivesLabel(exam, exam.reflexives);
+    const reflexiveDescription = tExamReflexivesDescription(exam, exam.reflexives);
     const link = document.createElement("a");
     link.className = "mode-card";
     link.href = buildExamReflexiveUrl(exam.id);
     link.innerHTML = `
-      <h2>${exam.reflexives.label}</h2>
-      <p>${exam.reflexives.description}</p>
+      <h2>${reflexiveLabel}</h2>
+      <p>${reflexiveDescription}</p>
       <p class="exam-card-meta">${t("exam.verbCount", { count: exam.reflexives.infinitives.length })}</p>
     `;
     reflexiveNav.appendChild(link);

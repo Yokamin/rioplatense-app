@@ -59,20 +59,20 @@ When generating learning materials, drill prompts, or instructional feedback in 
 2. **Pedagogical Feedback Principles**: 
    - Identify and explain structural or conjugation errors rather than providing immediate instant fixes without context.
    - Respect the user's learning curve by prioritizing foundational clarity over overwhelming advanced edge cases.
-3. **UI language (transitioning)**:
+3. **UI language**:
    - **Learning data** (verb forms, vocab Spanish, conjugation tables) stays Spanish regardless of UI locale.
-   - **UI chrome** (buttons, settings, instructions) is moving to an EN/ES pack via `t("key")` — see **Internationalization** below.
-   - Until a screen is migrated, English framing still applies for that screen.
+   - **UI chrome** (buttons, settings, instructions, stats, exam hub labels) uses EN/ES packs via `t("key")` on the **`feature/i18n`** branch — see **Internationalization** below. **`main`** (live Pages) stays English-only until that branch is merged.
 
 ---
 
-## 🌐 Internationalization
+## 🌐 Internationalization (`feature/i18n` — not yet on `main`)
 
-- **Locale files**: `src/i18n/en.js`, `src/i18n/es.js` — parallel key → string maps (281 keys).
+- **Locale files**: `src/i18n/en.js`, `src/i18n/es.js` — parallel key → string maps (**306 keys**).
 - **API**: `src/i18n/index.js` — `t(key, params?)`, `setLocale("en"|"es")`, `getLocale()`, `applyDocumentI18n()`, `initLocaleToggle()`.
-- **Page bootstrap**: `src/page-locale.js` — `setupPageLocale({ titleKey, onChange })` on every page.
-- **Toggle**: EN | ES in page header; choice persisted in `localStorage` (`rioplatense-locale`).
-- **HTML**: static labels use `data-i18n="key"`; dynamic strings use `t()` in JS.
+- **Localized metadata**: `src/localized-data.js` — exam snapshot/preset/reflexive labels and vocab category display names (JSON stays English; UI reads `exam.*` / `vocab.category.*` keys).
+- **Page bootstrap**: `src/page-locale.js` — `setupPageLocale({ titleKey, onChange })` on every page; restores toggle after bfcache via `pageshow`.
+- **Toggle**: GB / AR flag buttons in page header (`assets/flags/`); choice persisted in `localStorage` (`rioplatense-locale`).
+- **HTML**: static labels use `data-i18n="key"`; dynamic strings use `t()` in JS. Live locale refresh re-renders drill cards, stats chip/modal, and exam hub cards.
 - **Missing key**: shows `⟦missing: key⟧` in the active locale (no silent English fallback in ES mode).
 - **Rule for all new UI**: every new key **must** exist in **both** locale files. Run `node scripts/check-i18n.js` before pushing.
 
@@ -124,7 +124,7 @@ Verb entries contain base metadata and one or more **tense objects**, each holdi
 - [ ] Richer pedagogical feedback (explain error type before correction).
 
 ### Phase 3: Polish & Expansion
-- [x] UI locale pack (EN/ES) — on `feature/i18n` branch; merge after local testing
+- [x] UI locale pack (EN/ES) — **`feature/i18n`** pushed; merge to `main` when convenient (live Pages unchanged until then)
 - [ ] Additional tenses (e.g. preterite) via new tense keys on verb objects.
 - [ ] Mobile PWA (manifest, icons, offline shell).
 
@@ -160,10 +160,24 @@ Verb entries contain base metadata and one or more **tense objects**, each holdi
 | `settings-storage.js` | localStorage keys (main + exam-scoped) |
 | `card-creator.js` | Draft entry + export |
 | `i18n/index.js` | Locale toggle, `t()`, document i18n |
+| `localized-data.js` | Localized exam preset labels and vocab category names |
 | `page-locale.js` | Per-page locale bootstrap |
+| `reference.js` | Reference page entry (locale + back link) |
 
 ---
 
 ## 🚀 Deployment
 
 Static hosting only. See root **`README.md`** for GitHub Pages steps. Requires HTTP(S)—`fetch` does not work from `file://`.
+
+**Branches:** `main` → GitHub Pages (English UI). `feature/i18n` → full EN/ES UI for local testing; merge when ready.
+
+---
+
+## 📓 Development log
+
+| Date | Branch | Notes |
+|------|--------|-------|
+| 2026-07-20 | `main` | v1 shipped: conjugation, vocab, card creator, lookup, reference, stats. |
+| 2026-07-29 | `main` | v2 baseline (`88506d0`): exam hub, reflexives, per-verb drills, stem hints, expanded data. |
+| 2026-07-29 | `feature/i18n` | Full UI locale pack (306 keys), flag toggle, exam/vocab metadata i18n, live stats/card refresh on locale change; vocab card render fix (`formatTenseLabel` when `tense` absent). Branch pushed; **not merged** to `main` so live training stays English-only until author merges. |

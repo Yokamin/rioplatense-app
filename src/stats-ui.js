@@ -75,12 +75,17 @@ export function buildStatsDetailHtml(mode, modeLabel) {
 export function initStatsUi({
   mode,
   modeLabel,
+  modeLabelKey,
   toggleEl,
   modalEl,
   modalBodyEl,
   closeEl,
   onStatsChange,
 }) {
+  function resolveModeLabel() {
+    return modeLabelKey ? t(modeLabelKey) : modeLabel;
+  }
+
   function refreshChip() {
     toggleEl.innerHTML = `
       <span class="stats-chip-title">${t("stats.chipTitle")}</span>
@@ -90,7 +95,7 @@ export function initStatsUi({
   }
 
   function openModal() {
-    modalBodyEl.innerHTML = buildStatsDetailHtml(mode, modeLabel);
+    modalBodyEl.innerHTML = buildStatsDetailHtml(mode, resolveModeLabel());
     modalEl.hidden = false;
   }
 
@@ -98,12 +103,20 @@ export function initStatsUi({
     modalEl.hidden = true;
   }
 
+  function refreshLocalized() {
+    refreshChip();
+    if (!modalEl.hidden) {
+      openModal();
+    }
+  }
+
   modalBodyEl.addEventListener("click", (event) => {
     if (event.target.id !== "stats-reset") {
       return;
     }
 
-    if (!confirm(t("stats.resetConfirm", { modeLabel }))) {
+    const currentModeLabel = resolveModeLabel();
+    if (!confirm(t("stats.resetConfirm", { modeLabel: currentModeLabel }))) {
       return;
     }
 
@@ -121,5 +134,5 @@ export function initStatsUi({
     }
   });
 
-  return { refreshChip, openModal, closeModal };
+  return { refreshChip, refreshLocalized, openModal, closeModal };
 }

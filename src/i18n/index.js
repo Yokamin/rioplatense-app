@@ -8,8 +8,46 @@ const LOCALES = {
 
 export const LOCALE_STORAGE_KEY = "rioplatense-locale";
 
+const LOCALE_FLAG_SRC = {
+  en: "assets/flags/gb.svg",
+  es: "assets/flags/ar.svg",
+};
+
 let currentLocale = "en";
 const listeners = new Set();
+let localeToggleHost = null;
+let localeToggleClickBound = false;
+let localeToggleRenderRegistered = false;
+
+function renderLocaleToggle() {
+  const container = localeToggleHost;
+  if (!container) {
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="locale-toggle" role="group" aria-label="${t("locale.switchAria")}">
+      <button
+        type="button"
+        class="locale-btn locale-btn-flag${currentLocale === "en" ? " is-active" : ""}"
+        data-locale="en"
+        aria-label="${t("locale.englishAria")}"
+        title="${t("locale.englishAria")}"
+      >
+        <img class="locale-flag-icon" src="${LOCALE_FLAG_SRC.en}" alt="" />
+      </button>
+      <button
+        type="button"
+        class="locale-btn locale-btn-flag${currentLocale === "es" ? " is-active" : ""}"
+        data-locale="es"
+        aria-label="${t("locale.spanishAria")}"
+        title="${t("locale.spanishAria")}"
+      >
+        <img class="locale-flag-icon" src="${LOCALE_FLAG_SRC.es}" alt="" />
+      </button>
+    </div>
+  `;
+}
 
 function interpolate(text, params = {}) {
   let result = String(text);
@@ -86,21 +124,22 @@ export function initLocaleToggle(container) {
     return;
   }
 
-  const render = () => {
-    container.innerHTML = `
-      <div class="locale-toggle" role="group" aria-label="${t("locale.switchAria")}">
-        <button type="button" class="locale-btn${currentLocale === "en" ? " is-active" : ""}" data-locale="en">EN</button>
-        <button type="button" class="locale-btn${currentLocale === "es" ? " is-active" : ""}" data-locale="es">ES</button>
-      </div>
-    `;
+  localeToggleHost = container;
 
-    for (const button of container.querySelectorAll("[data-locale]")) {
-      button.addEventListener("click", () => {
+  if (!localeToggleClickBound) {
+    localeToggleClickBound = true;
+    container.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-locale]");
+      if (button) {
         setLocale(button.dataset.locale);
-      });
-    }
-  };
+      }
+    });
+  }
 
-  render();
-  onLocaleChange(render);
+  if (!localeToggleRenderRegistered) {
+    localeToggleRenderRegistered = true;
+    onLocaleChange(renderLocaleToggle);
+  }
+
+  renderLocaleToggle();
 }

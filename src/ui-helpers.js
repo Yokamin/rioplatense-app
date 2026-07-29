@@ -1,5 +1,6 @@
 import { ANSWER_FEEDBACK, evaluateAnswer } from "./answer-check.js";
 import { t } from "./i18n/index.js";
+import { tVocabCategoryName } from "./localized-data.js";
 import { formatStemChangeHint, getStemChangeHint } from "./stem-hints.js";
 import { getConjugationDialectNote } from "./rioplatense-notes.js";
 import { recordAnswerResult } from "./stats-storage.js";
@@ -30,6 +31,10 @@ function normalizeInputMode(mode) {
 }
 
 function formatTenseLabel(tenseId) {
+  if (!tenseId) {
+    return "";
+  }
+
   const key = `tense.${tenseId}`;
   const label = t(key);
   return label.startsWith("⟦missing:") ? tenseId.replace(/_/g, " ") : label;
@@ -254,9 +259,10 @@ function buildMetaText(card, practiceInputMode, deckProgress) {
   const progressLine = formatProgressLine(deckProgress);
 
   if (card.type === "vocab") {
+    const english = card.english ?? card.prompt ?? "";
     return practiceInputMode === "type"
-      ? t("drill.vocabTypePrompt", { english: card.english })
-      : t("drill.vocabRecallPrompt", { english: card.english });
+      ? t("drill.vocabTypePrompt", { english })
+      : t("drill.vocabRecallPrompt", { english });
   }
 
   if (card.type === "verb_table" || card.type === "reflexive_table") {
@@ -314,10 +320,15 @@ function paintDrillCardChrome(
   const verbPeekAria = t("drill.verbPeekAria");
 
   if (card.type === "vocab") {
+    const englishCue = card.english ?? card.prompt ?? "";
+    const categoryName = card.categoryId
+      ? tVocabCategoryName(card.categoryId, card.categoryName)
+      : card.categoryName;
     cardEl.innerHTML = `
       <p class="card-label">${t("drill.vocabulary")}</p>
-      <p class="card-prompt">${escapeHtml(card.prompt)}</p>
-      <p class="card-hint">${t("drill.categoryLabel", { categoryName: card.categoryName })}</p>
+      <p class="card-hint card-hint--vocab-cue">${t("drill.vocabEnglishCue")}</p>
+      <p class="card-prompt">${escapeHtml(englishCue)}</p>
+      <p class="card-hint">${t("drill.categoryLabel", { categoryName })}</p>
     `;
   } else if (card.type === "verb_table" || card.type === "reflexive_table") {
     const label =

@@ -1,6 +1,8 @@
 export const messages = {
   // locale
   "locale.switchAria": "Cambiar idioma",
+  "locale.englishAria": "Interfaz en inglés (idioma de la app)",
+  "locale.spanishAria": "Interfaz en español (idioma de la app)",
 
   // nav
   "nav.home": "← Inicio",
@@ -248,6 +250,35 @@ export const messages = {
   "exam.loadFailed": "No se pudieron cargar los exámenes: {message}.{fileProtocolHint}",
   "exam.conjugationDrillsAria": "Ejercicios de conjugación de {examLabel}",
   "exam.reflexiveDrillsAria": "Ejercicios reflexivos de {examLabel}",
+  "exam.snapshot.exam_2026_07_30.label": "Examen 30-jul-26",
+  "exam.preset.priority_irregular.label": "Irregulares y cambio de raíz",
+  "exam.preset.priority_irregular.description":
+    "Enfoque del jueves: ser, estar, tener, hacer, ir, venir, decir, poner, ver, querer, poder, salir, dormir, cerrar, empezar, pedir.",
+  "exam.preset.regular_common.label": "Regulares (comunes)",
+  "exam.preset.regular_common.description":
+    "Muestra corta de verbos cotidianos -ar, -er e -ir.",
+  "exam.preset.regular_full.label": "Regulares (lista completa de clase)",
+  "exam.preset.regular_full.description":
+    "Todos los verbos regulares de la sección 1.1 de clase (presente).",
+  "exam.snapshot.exam_2026_07_30.reflexives.label": "Reflexivos de rutina diaria",
+  "exam.snapshot.exam_2026_07_30.reflexives.description":
+    "Imagen + reflexivos de rutina de clase: despertarse, ducharse, vestirse, acostarse y más.",
+
+  // vocab categories
+  "vocab.category.days_of_week": "Días de la semana",
+  "vocab.category.months_of_year": "Meses del año",
+  "vocab.category.frecuencias": "Frecuencia y hábito",
+  "vocab.category.emociones": "Emociones y estados físicos",
+  "vocab.category.numeros": "Números",
+  "vocab.category.estaciones": "Estaciones",
+  "vocab.category.fechas_ejemplo": "Fechas y horarios de ejemplo",
+  "vocab.category.habitaciones_y_areas": "Habitaciones y áreas",
+  "vocab.category.familia": "Familia",
+  "vocab.category.adverbios_lugar": "Adverbios de lugar",
+  "vocab.category.positional": "Posición y dirección",
+  "vocab.category.modismos": "Modismos argentinos",
+  "vocab.category.general": "Palabras generales",
+  "drill.vocabEnglishCue": "Inglés",
 
   // verbs
   "verbs.filterAria": "Filtro de lista de verbos",
