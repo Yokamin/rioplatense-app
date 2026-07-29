@@ -25,6 +25,7 @@ import {
   setPracticeInputMode,
   showSettingsOverlay,
 } from "./ui-helpers.js";
+import { initSmartBackLink } from "./navigation.js";
 
 const overlayEl = document.getElementById("settings-overlay");
 const sessionEl = document.getElementById("drill-session");
@@ -67,6 +68,28 @@ const drillUi = {
 
 function getAvailableCategories() {
   return listVocabCategories(vocab).filter((category) => category.itemCount > 0);
+}
+
+function reconcileCategorySettings(settings) {
+  const availableIds = getAvailableCategories().map((category) => category.id);
+
+  if (availableIds.length === 0) {
+    return [];
+  }
+
+  const savedIds = settings.categoryIds ?? [];
+  const validSaved = savedIds.filter((id) => availableIds.includes(id));
+
+  if (validSaved.length === 0) {
+    return availableIds;
+  }
+
+  const missingNewCategories = availableIds.filter((id) => !validSaved.includes(id));
+  if (missingNewCategories.length > 0) {
+    return [...validSaved, ...missingNewCategories];
+  }
+
+  return validSaved;
 }
 
 function readSettingsFromForm() {
@@ -147,6 +170,11 @@ function beginSession() {
 }
 
 async function init() {
+  initSmartBackLink(document.getElementById("back-link"), {
+    fallbackHref: "index.html",
+    fallbackLabel: "← Home",
+  });
+
   try {
     resetSessionStats("vocab");
 
@@ -164,11 +192,11 @@ async function init() {
     const data = await loadAllData();
     vocab = data.vocab;
 
-    if (activeSettings.categoryIds.length === 0) {
-      activeSettings.categoryIds = getAvailableCategories().map(
-        (category) => category.id
-      );
-    }
+    activeSettings = {
+      ...activeSettings,
+      categoryIds: reconcileCategorySettings(activeSettings),
+    };
+    savePracticeSettings(SETTINGS_KEYS.vocab, activeSettings);
 
     populateCategoryFilters();
     applySettingsToForm(activeSettings);

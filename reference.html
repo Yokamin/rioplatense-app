@@ -9,7 +9,7 @@
   <body>
     <main class="app">
       <header>
-        <p class="back-link"><a href="index.html">← Home</a></p>
+        <p class="back-link"><a id="back-link" href="index.html">← Home</a></p>
         <h1>Reference</h1>
         <p class="subtitle">Short notes on verb types used in this app</p>
       </header>
@@ -56,6 +56,31 @@
       </section>
 
       <section class="panel">
+        <h2 class="panel-title">Reflexive verbs (*Verbos reflexivos*)</h2>
+        <p>
+          The action reflects back on the subject. You need a <strong>reflexive pronoun</strong> before the conjugated verb.
+          Reflexive Practice drills the full form (e.g. <em>me lavo</em>, not just <em>lavo</em>).
+        </p>
+        <ul class="reference-list">
+          <li><strong>yo</strong> → <em>me</em> (me lavo)</li>
+          <li><strong>vos / tú</strong> → <em>te</em> (te lavás / te lavas)</li>
+          <li><strong>él / ella / usted</strong> → <em>se</em> (se lava) — yes, third person uses <em>se</em></li>
+          <li><strong>nosotros</strong> → <em>nos</em> (nos lavamos)</li>
+          <li><strong>vosotros</strong> → <em>os</em> (os laváis)</li>
+          <li><strong>ustedes / ellos / ellas</strong> → <em>se</em> (se lavan)</li>
+        </ul>
+        <p>
+          <strong>Not reflexive:</strong> <em>lavo el auto</em> (I wash the car — direct object, no pronoun).
+          <strong>Reflexive:</strong> <em>me lavo</em> (I wash myself).
+          Same verb, different meaning — the pronoun is what makes it reflexive.
+        </p>
+        <p class="field-hint">
+          Common exam routine verbs: <em>despertarse, levantarse, ducharse, vestirse, acostarse…</em>
+          Use Reflexive Practice for these; Conjugation Practice excludes them on purpose.
+        </p>
+      </section>
+
+      <section class="panel">
         <h2 class="panel-title">Rioplatense note</h2>
         <p>
           Active practice defaults to <em>vos</em>. Forms like <em>tú</em> and <em>vosotros</em> are kept for recognition
@@ -63,5 +88,14 @@
         </p>
       </section>
     </main>
+
+    <script type="module">
+      import { initSmartBackLink } from "./src/navigation.js";
+
+      initSmartBackLink(document.getElementById("back-link"), {
+        fallbackHref: "index.html",
+        fallbackLabel: "← Home",
+      });
+    </script>
   </body>
 </html>

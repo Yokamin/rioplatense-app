@@ -10,13 +10,18 @@ import {
   listVerbsForTense,
 } from "./card-picker.js";
 import { buildVerbDrillDeck, createDrillRunner } from "./drill-session.js";
-import { getConjugationDialectNote } from "./rioplatense-notes.js";
-import { getExamPreset, loadExamById } from "./exam-loader.js";
+import { getExamReflexives, loadExamById } from "./exam-loader.js";
+import { initSmartBackLink } from "./navigation.js";
 import {
+  normalizeReflexiveSettings,
+  saveSettingsIfRepaired,
+} from "./practice-settings.js";
+import { getConjugationDialectNote } from "./rioplatense-notes.js";
+import {
+  examReflexiveSettingsKey,
   loadPracticeSettings,
   savePracticeSettings,
   SETTINGS_KEYS,
-  examConjugationSettingsKey,
 } from "./settings-storage.js";
 import { initStatsUi } from "./stats-ui.js";
 import { resetSessionStats } from "./stats-storage.js";
@@ -39,23 +44,14 @@ import {
   setPracticeInputMode,
   showSettingsOverlay,
   TENSE_OPTIONS,
-  VERB_TYPE_GROUPS,
-  allVerbTypeIds,
-  expandVerbTypeGroups,
   getCardOrderFromForm,
   getDrillStyleFromForm,
   getStemHintsFromForm,
   setStemHintsOnForm,
-  verbTypesToGroupSelection,
 } from "./ui-helpers.js";
 import { getFrequencyBadge, getVerbFrequency } from "./verb-frequency.js";
 import { initVerbDetailModal } from "./verb-detail-modal.js";
 import { initVerbPicker } from "./verb-picker.js";
-import { initSmartBackLink } from "./navigation.js";
-import {
-  normalizeConjugationSettings,
-  saveSettingsIfRepaired,
-} from "./practice-settings.js";
 
 const overlayEl = document.getElementById("settings-overlay");
 const sessionEl = document.getElementById("drill-session");
@@ -73,7 +69,6 @@ const startBtn = document.getElementById("start-practice");
 const changeSettingsBtn = document.getElementById("change-settings");
 const sessionBarEl = document.getElementById("session-bar");
 const tenseSelect = document.getElementById("tense");
-const verbTypeFilters = document.getElementById("verb-type-filters");
 const pronounFilters = document.getElementById("pronoun-filters");
 const verbPickerToggle = document.getElementById("verb-picker-toggle");
 const verbPickerModal = document.getElementById("verb-picker-modal");
@@ -99,12 +94,10 @@ const settingsIntroEl = document.getElementById("settings-intro");
 
 const urlParams = new URLSearchParams(window.location.search);
 const examId = urlParams.get("exam");
-const presetId = urlParams.get("preset");
-const isExamMode = Boolean(examId && presetId);
+const isExamMode = Boolean(examId);
 
 const DEFAULT_SETTINGS = {
   tense: DEFAULT_TENSE,
-  types: allVerbTypeIds(),
   pronouns: [...PRONOUN_KEYS],
   infinitives: null,
   inputMode: "type",
@@ -114,12 +107,12 @@ const DEFAULT_SETTINGS = {
 };
 
 let examContext = null;
-let examPreset = null;
+let examReflexives = null;
 let scopedInfinitives = null;
-let settingsStorageKey = SETTINGS_KEYS.conjugation;
+let settingsStorageKey = SETTINGS_KEYS.reflexive;
 
 let verbs = [];
-let activeSettings = normalizeConjugationSettings(
+let activeSettings = normalizeReflexiveSettings(
   loadPracticeSettings(settingsStorageKey, DEFAULT_SETTINGS),
   DEFAULT_SETTINGS
 );
@@ -192,7 +185,6 @@ function resolveInfinitivesForDrill(infinitives) {
 function readSettingsFromForm() {
   return {
     tense: tenseSelect.value,
-    types: expandVerbTypeGroups(getCheckedValues(verbTypeFilters)),
     pronouns: getCheckedValues(pronounFilters),
     infinitives: intersectWithExamScope(verbPicker.readSelectionForSettings()),
     inputMode: getSelectedPracticeInputMode(settingsFormEl),
@@ -203,10 +195,9 @@ function readSettingsFromForm() {
 }
 
 function applySettingsToForm(settings) {
-  const normalized = normalizeConjugationSettings(settings, DEFAULT_SETTINGS);
+  const normalized = normalizeReflexiveSettings(settings, DEFAULT_SETTINGS);
 
   tenseSelect.value = normalized.tense;
-  setCheckedValues(verbTypeFilters, verbTypesToGroupSelection(normalized.types));
   setCheckedValues(pronounFilters, normalized.pronouns);
   setPracticeInputMode(settingsFormEl, normalized.inputMode ?? "type");
   setDrillStyleOnForm(settingsFormEl, normalized.drillStyle);
@@ -216,38 +207,29 @@ function applySettingsToForm(settings) {
   verbPicker.applySelection(normalized.infinitives);
 }
 
-function normalizeDrillOptions({
-  tense,
-  types,
-  pronouns,
-  infinitives,
-}) {
+function normalizeDrillOptions({ tense, pronouns, infinitives }) {
   return {
     tense,
-    types: types?.length > 0 ? types : null,
+    types: null,
     pronouns: pronouns?.length > 0 ? pronouns : PRONOUN_KEYS,
-    infinitives,
-    reflexiveOnly: false,
+    infinitives: resolveInfinitivesForDrill(infinitives),
+    reflexiveOnly: true,
   };
 }
 
 function countMatchingVerbsFromForm(_selectedIds, infinitives) {
   return countEligibleVerbs(
-    verbs,
+    verbs.filter((verb) => verb.is_reflexive === true),
     normalizeDrillOptions({
       tense: tenseSelect.value,
-      types: expandVerbTypeGroups(getCheckedValues(verbTypeFilters)),
       pronouns: getCheckedValues(pronounFilters),
-      infinitives: resolveInfinitivesForDrill(infinitives),
+      infinitives,
     })
   );
 }
 
 function getDrillOptions(settings = activeSettings) {
-  return normalizeDrillOptions({
-    ...settings,
-    infinitives: resolveInfinitivesForDrill(settings.infinitives),
-  });
+  return normalizeDrillOptions(settings);
 }
 
 function showNextCard() {
@@ -285,13 +267,15 @@ function populateTenseSelect() {
 }
 
 function populateVerbPicker(tense) {
-  const completeVerbs = listVerbsForTense(verbs, tense, { reflexiveOnly: false }).filter(
+  const reflexiveSource = verbs.filter((verb) => verb.is_reflexive === true);
+  const completeVerbs = listVerbsForTense(reflexiveSource, tense).filter(
     (verb) => verb.isComplete
   );
   const scopedVerbs = scopedInfinitives
     ? completeVerbs.filter((verb) => scopedInfinitives.includes(verb.infinitive))
     : completeVerbs;
-  const defaultSelection = scopedInfinitives ?? completeVerbs.map((verb) => verb.infinitive);
+  const defaultSelection =
+    scopedInfinitives ?? completeVerbs.map((verb) => verb.infinitive);
 
   verbPicker.setVerbItems(
     scopedVerbs.map((verb) => ({
@@ -307,25 +291,25 @@ function populateVerbPicker(tense) {
 }
 
 function beginSession() {
-  activeSettings = normalizeConjugationSettings(readSettingsFromForm(), DEFAULT_SETTINGS);
+  activeSettings = normalizeReflexiveSettings(readSettingsFromForm(), DEFAULT_SETTINGS);
   activeSettings.inputMode =
     activeSettings.inputMode === "reveal" ? "reveal" : "type";
   savePracticeSettings(settingsStorageKey, activeSettings);
 
-  const deck = buildVerbDrillDeck(verbs, getDrillOptions(), {
+  const reflexiveVerbs = verbs.filter((verb) => verb.is_reflexive === true);
+  const deck = buildVerbDrillDeck(reflexiveVerbs, getDrillOptions(), {
     drillStyle: activeSettings.drillStyle,
     cardOrder: activeSettings.cardOrder,
   });
   drillRunner = createDrillRunner(deck, activeSettings.cardOrder);
 
   if (deck.length === 0) {
-    startBtn.disabled = false;
-    alert("No verbs match these settings. Widen your filters and try again.");
+    alert("No reflexive verbs match these settings. Widen your filters and try again.");
     return;
   }
 
   configureDrillUi({
-    mode: "conjugation",
+    mode: "reflexive",
     practiceInputMode: activeSettings.inputMode,
     showStemHints: activeSettings.stemHints,
     statsRefreshFn: () => statsUi.refreshChip(),
@@ -340,30 +324,27 @@ function beginSession() {
   showNextCard();
 }
 
-function refreshFilterDependentUi() {
-  verbPicker.updateToggleLabel();
-}
-
 function wireSettingsListeners() {
   tenseSelect.addEventListener("change", () => {
     populateVerbPicker(tenseSelect.value);
   });
 
-  verbTypeFilters.addEventListener("change", refreshFilterDependentUi);
-  pronounFilters.addEventListener("change", refreshFilterDependentUi);
+  pronounFilters.addEventListener("change", () => {
+    verbPicker.updateToggleLabel();
+  });
 }
 
 function configureExamChrome() {
-  if (!isExamMode || !examContext || !examPreset) {
+  if (!isExamMode || !examContext || !examReflexives) {
     return;
   }
 
-  document.title = `${examPreset.label} · ${examContext.label}`;
+  document.title = `${examReflexives.label} · ${examContext.label}`;
   pageTitleEl.textContent = examContext.label;
   examScopeBannerEl.hidden = false;
-  examScopeBannerEl.textContent = `${examPreset.label} · ${scopedInfinitives.length} verbs in scope`;
+  examScopeBannerEl.textContent = `${examReflexives.label} · ${scopedInfinitives.length} verbs in scope`;
   settingsIntroEl.textContent =
-    "Exam-scoped conjugation. You can still narrow pronouns or pick specific verbs within this list.";
+    "Exam-scoped reflexive practice. Answers include the reflexive pronoun (e.g. me lavo).";
   initSmartBackLink(backLinkEl, {
     fallbackHref: "exam.html",
     fallbackLabel: "← Exam Practice",
@@ -386,20 +367,16 @@ async function initExamScope() {
     return;
   }
 
-  if (!examId || !presetId) {
-    throw new Error("Exam mode requires both exam and preset URL parameters.");
-  }
-
   examContext = await loadExamById(examId);
-  examPreset = getExamPreset(examContext, presetId);
-  scopedInfinitives = [...examPreset.infinitives];
-  settingsStorageKey = examConjugationSettingsKey(examId, presetId);
+  examReflexives = getExamReflexives(examContext);
+  scopedInfinitives = [...examReflexives.infinitives];
+  settingsStorageKey = examReflexiveSettingsKey(examId);
   const examDefaults = {
     ...DEFAULT_SETTINGS,
     infinitives: scopedInfinitives,
   };
   const loadedSettings = loadPracticeSettings(settingsStorageKey, examDefaults);
-  activeSettings = normalizeConjugationSettings(loadedSettings, examDefaults);
+  activeSettings = normalizeReflexiveSettings(loadedSettings, examDefaults);
   activeSettings.infinitives = resolveInfinitivesForDrill(activeSettings.infinitives);
   saveSettingsIfRepaired(
     settingsStorageKey,
@@ -412,11 +389,11 @@ async function initExamScope() {
 
 async function init() {
   try {
-    resetSessionStats("conjugation");
+    resetSessionStats("reflexive");
 
     statsUi = initStatsUi({
-      mode: "conjugation",
-      modeLabel: "Conjugation",
+      mode: "reflexive",
+      modeLabel: "Reflexive",
       toggleEl: statsToggle,
       modalEl: statsModal,
       modalBodyEl: statsModalBody,
@@ -433,6 +410,7 @@ async function init() {
       selectCommonBtn: verbSelectCommonBtn,
       clearAllBtn: verbClearAllBtn,
       countMatchingVerbs: countMatchingVerbsFromForm,
+      itemLabel: "reflexive verbs",
     });
 
     verbDetailModal = initVerbDetailModal({
@@ -459,7 +437,7 @@ async function init() {
       ? { ...DEFAULT_SETTINGS, infinitives: scopedInfinitives }
       : DEFAULT_SETTINGS;
     const loadedSettings = loadPracticeSettings(settingsStorageKey, normalizeDefaults);
-    activeSettings = normalizeConjugationSettings(activeSettings, normalizeDefaults);
+    activeSettings = normalizeReflexiveSettings(activeSettings, normalizeDefaults);
     saveSettingsIfRepaired(
       settingsStorageKey,
       loadedSettings,
@@ -472,12 +450,6 @@ async function init() {
     }
 
     populateTenseSelect();
-    populateCheckboxGroup(
-      verbTypeFilters,
-      VERB_TYPE_GROUPS,
-      "verb-type-group",
-      verbTypesToGroupSelection(activeSettings.types)
-    );
     populateCheckboxGroup(
       pronounFilters,
       PRONOUN_KEYS.map((id) => ({

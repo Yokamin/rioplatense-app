@@ -24,9 +24,23 @@ function hasCompleteConjugation(tenseMap, pronouns) {
  */
 export function filterVerbsForDrill(
   verbs,
-  { tense = DEFAULT_TENSE, types = null, infinitives = null, pronouns = PRONOUN_KEYS } = {}
+  {
+    tense = DEFAULT_TENSE,
+    types = null,
+    infinitives = null,
+    pronouns = PRONOUN_KEYS,
+    reflexiveOnly = false,
+  } = {}
 ) {
   return verbs.filter((verb) => {
+    if (reflexiveOnly && !verb.is_reflexive) {
+      return false;
+    }
+
+    if (!reflexiveOnly && verb.is_reflexive) {
+      return false;
+    }
+
     const tenseMap = verb[tense];
     if (!tenseMap || !hasCompleteConjugation(tenseMap, pronouns)) {
       return false;
@@ -89,6 +103,7 @@ export function pickRandomVerbCard(verbs, options = {}) {
     types = null,
     infinitives = null,
     pronouns = PRONOUN_KEYS,
+    reflexiveOnly = false,
   } = options;
 
   const eligibleVerbs = filterVerbsForDrill(verbs, {
@@ -96,6 +111,7 @@ export function pickRandomVerbCard(verbs, options = {}) {
     types,
     infinitives,
     pronouns,
+    reflexiveOnly,
   });
 
   if (eligibleVerbs.length === 0) {
@@ -110,7 +126,7 @@ export function pickRandomVerbCard(verbs, options = {}) {
   const conjugation = verb[tense][pronoun];
 
   return {
-    type: "verb",
+    type: verb.is_reflexive ? "reflexive" : "verb",
     tense,
     infinitive: verb.infinitive,
     english: verb.english,
@@ -132,9 +148,23 @@ export function listVocabCategories(vocab) {
 }
 
 /** List verbs that support a given tense (including incomplete ones). */
-export function listVerbsForTense(verbs, tense = DEFAULT_TENSE) {
+export function listVerbsForTense(verbs, tense = DEFAULT_TENSE, { reflexiveOnly = null } = {}) {
   return verbs
-    .filter((verb) => verb[tense])
+    .filter((verb) => {
+      if (!verb[tense]) {
+        return false;
+      }
+
+      if (reflexiveOnly === true && !verb.is_reflexive) {
+        return false;
+      }
+
+      if (reflexiveOnly === false && verb.is_reflexive) {
+        return false;
+      }
+
+      return true;
+    })
     .map((verb) => ({
       infinitive: verb.infinitive,
       english: verb.english,

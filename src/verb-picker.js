@@ -8,7 +8,7 @@ import {
   setCheckedValues,
 } from "./ui-helpers.js";
 
-function formatVerbPickerLabel({ selectedCount, total, matchCount }) {
+function formatVerbPickerLabel({ selectedCount, total, matchCount, itemLabel = "verbs" }) {
   if (selectedCount === 0) {
     return "No verbs selected";
   }
@@ -18,10 +18,10 @@ function formatVerbPickerLabel({ selectedCount, total, matchCount }) {
   }
 
   if (selectedCount === total) {
-    return `All verbs (${total})`;
+    return `All ${itemLabel} (${total})`;
   }
 
-  return `${selectedCount} of ${total} verbs selected`;
+  return `${selectedCount} of ${total} ${itemLabel} selected`;
 }
 
 export function initVerbPicker({
@@ -35,6 +35,7 @@ export function initVerbPicker({
   clearAllBtn,
   countMatchingVerbs,
   onChange,
+  itemLabel = "verbs",
 }) {
   let verbItems = [];
 
@@ -49,6 +50,7 @@ export function initVerbPicker({
       selectedCount: selected.length,
       total,
       matchCount,
+      itemLabel,
     });
   }
 

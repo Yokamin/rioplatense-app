@@ -16,6 +16,7 @@ import {
 } from "./draft-storage.js";
 import { VERB_TYPES } from "./ui-helpers.js";
 import { getFileProtocolHint, setStatus } from "./ui-helpers.js";
+import { initSmartBackLink } from "./navigation.js";
 
 const statusEl = document.getElementById("status");
 const draftSummaryEl = document.getElementById("draft-summary");
@@ -111,6 +112,11 @@ async function reloadMergedData() {
 }
 
 async function init() {
+  initSmartBackLink(document.getElementById("back-link"), {
+    fallbackHref: "index.html",
+    fallbackLabel: "← Home",
+  });
+
   try {
     populateVerbTypeSelect();
     buildConjugationFields();

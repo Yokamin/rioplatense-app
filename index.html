@@ -10,31 +10,42 @@
     <main class="app">
       <header>
         <h1>Rioplatense Practice</h1>
-        <p class="subtitle">Choose a mode</p>
+        <nav class="tools-bar" aria-label="Tools">
+          <!-- Card Creator hidden for now — page kept at card-creator.html; not used on phone. Re-enable when adding data via UI again. -->
+          <a class="tool-link" href="verbs.html">Verb Lookup</a>
+          <a class="tool-link" href="reference.html">Reference</a>
+        </nav>
       </header>
 
-      <nav class="mode-nav" aria-label="Practice modes">
-        <a class="mode-card" href="conjugation.html">
-          <h2>Conjugation Practice</h2>
-          <p>Drill verb forms by tense, type, and pronoun.</p>
-        </a>
-        <a class="mode-card" href="vocab.html">
-          <h2>Vocabulary Recall</h2>
-          <p>Recall Spanish words from English prompts by category.</p>
-        </a>
-        <a class="mode-card" href="card-creator.html">
-          <h2>Card Creator</h2>
-          <p>Add words and verbs, then export JSON for your data files.</p>
-        </a>
-        <a class="mode-card" href="verbs.html">
-          <h2>Verb Lookup</h2>
-          <p>Browse all verbs and full conjugation tables.</p>
-        </a>
-        <a class="mode-card" href="reference.html">
-          <h2>Reference</h2>
-          <p>Verb types, core verbs, and short grammar notes.</p>
-        </a>
-      </nav>
+      <section class="home-section" aria-labelledby="practice-heading">
+        <h2 id="practice-heading" class="home-section-title">Practice</h2>
+        <p class="home-section-intro">Pick a drill.</p>
+        <nav class="mode-nav" aria-label="Practice drills">
+          <a class="mode-card" href="conjugation.html">
+            <h3>Conjugation Practice</h3>
+            <p>Drill verb forms by tense, type, and pronoun.</p>
+          </a>
+          <a class="mode-card" href="reflexive.html">
+            <h3>Reflexive Practice</h3>
+            <p>Daily routine reflexives — type answers like me lavo.</p>
+          </a>
+          <a class="mode-card" href="vocab.html">
+            <h3>Vocabulary Recall</h3>
+            <p>Recall Spanish from English — frequencies, emotions, family, modismos, and more.</p>
+          </a>
+        </nav>
+      </section>
+
+      <section class="home-section" aria-labelledby="exam-heading">
+        <h2 id="exam-heading" class="home-section-title">Exam prep</h2>
+        <p class="home-section-intro">Scoped drills for a specific exam date.</p>
+        <nav class="mode-nav" aria-label="Exam practice">
+          <a class="mode-card" href="exam.html">
+            <h3>Exam Practice</h3>
+            <p>Irregular, regular tiers, reflexives — limited to your exam snapshot.</p>
+          </a>
+        </nav>
+      </section>
     </main>
   </body>
 </html>

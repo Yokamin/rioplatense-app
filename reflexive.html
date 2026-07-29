@@ -3,21 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Conjugation Practice · Rioplatense</title>
+    <title>Reflexive Practice · Rioplatense</title>
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
     <main class="app">
       <header>
         <p class="back-link"><a id="back-link" href="index.html">← Home</a></p>
-        <h1 id="page-title">Conjugation Practice</h1>
+        <h1 id="page-title">Reflexive Practice</h1>
         <p id="exam-scope-banner" class="exam-scope-banner" hidden></p>
       </header>
 
       <div id="settings-overlay" class="settings-overlay">
-        <section class="settings-dialog" aria-labelledby="conjugation-settings-title">
-          <h2 id="conjugation-settings-title">Session settings</h2>
-          <p id="settings-intro" class="field-hint">Choose your filters, then start. Settings are remembered next time.</p>
+        <section class="settings-dialog" aria-labelledby="reflexive-settings-title">
+          <h2 id="reflexive-settings-title">Session settings</h2>
+          <p id="settings-intro" class="field-hint">
+            Practice daily-routine reflexives. Answers include the pronoun (e.g. me lavo).
+          </p>
 
           <fieldset class="fieldset">
             <legend>Drill format</legend>
@@ -68,8 +70,8 @@
               Show stem-change hints (e → ie, o → ue, e → i)
             </label>
             <p class="field-hint">
-              When a form uses a stem change, a short reminder appears on the card (e.g. <em>siento</em>, not
-              <em>sento</em>). Vos forms like <em>tenés</em> stay silent because they keep the regular stem.
+              When a form uses a stem change, a short reminder appears on the card (e.g. <em>me siento</em>, not
+              <em>me sento</em>). Vos forms like <em>te sentás</em> stay silent because they keep the regular stem.
             </p>
           </fieldset>
 
@@ -79,21 +81,13 @@
           </div>
 
           <details class="fieldset collapsible">
-            <summary>Verb types</summary>
-            <div id="verb-type-filters" class="checkbox-grid"></div>
-          </details>
-
-          <details class="fieldset collapsible">
             <summary>Pronouns</summary>
             <div id="pronoun-filters" class="checkbox-grid"></div>
           </details>
 
           <fieldset class="fieldset">
             <legend>Specific verbs (optional)</legend>
-            <p class="field-hint">
-              Verbs are grouped by frequency: <strong>core</strong> (essential), <strong>common</strong> (everyday),
-              and <strong>extended</strong> (useful but situational). Leave all selected to drill every verb.
-            </p>
+            <p class="field-hint">Leave all selected to drill every reflexive verb in scope.</p>
             <button
               type="button"
               id="verb-picker-toggle"
@@ -114,7 +108,7 @@
             aria-labelledby="verb-picker-title"
           >
             <section class="modal-dialog modal-dialog-wide">
-              <h2 id="verb-picker-title">Choose verbs</h2>
+              <h2 id="verb-picker-title">Choose reflexive verbs</h2>
               <div class="picker-toolbar">
                 <button type="button" id="verb-select-core" class="secondary-action">Core only</button>
                 <button type="button" id="verb-select-common" class="secondary-action">Core + common</button>
@@ -180,6 +174,6 @@
       </div>
     </main>
 
-    <script type="module" src="src/conjugation.js"></script>
+    <script type="module" src="src/reflexive.js"></script>
   </body>
 </html>

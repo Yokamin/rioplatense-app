@@ -9,10 +9,22 @@
   <body>
     <main class="app app-wide">
       <header>
-        <p class="back-link"><a href="index.html">← Home</a></p>
+        <p class="back-link"><a id="back-link" href="index.html">← Home</a></p>
         <h1>Verb Lookup</h1>
-        <p class="subtitle">Browse conjugation tables and verb types</p>
+        <p class="subtitle">Browse all verbs — reflexives are tagged separately from regular conjugation verbs</p>
       </header>
+
+      <div class="filter-tabs" role="tablist" aria-label="Verb list filter">
+        <button type="button" class="filter-tab is-active" data-filter="all" role="tab" aria-selected="true">
+          All
+        </button>
+        <button type="button" class="filter-tab" data-filter="non-reflexive" role="tab" aria-selected="false">
+          Non-reflexive
+        </button>
+        <button type="button" class="filter-tab" data-filter="reflexive" role="tab" aria-selected="false">
+          Reflexive only
+        </button>
+      </div>
 
       <div class="field">
         <label for="verb-search">Search</label>

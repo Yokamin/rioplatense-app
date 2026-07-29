@@ -10,6 +10,7 @@ const EMPTY_COUNTS = {
 
 const sessionStats = {
   conjugation: { ...EMPTY_COUNTS },
+  reflexive: { ...EMPTY_COUNTS },
   vocab: { ...EMPTY_COUNTS },
 };
 
@@ -34,6 +35,7 @@ function loadStoredStats() {
     if (!raw) {
       return {
         conjugation: emptyModeStats(),
+        reflexive: emptyModeStats(),
         vocab: emptyModeStats(),
       };
     }
@@ -45,6 +47,10 @@ function loadStoredStats() {
         lifetime: normalizeCounts(parsed.conjugation?.lifetime),
         daily: parsed.conjugation?.daily ?? {},
       },
+      reflexive: {
+        lifetime: normalizeCounts(parsed.reflexive?.lifetime),
+        daily: parsed.reflexive?.daily ?? {},
+      },
       vocab: {
         lifetime: normalizeCounts(parsed.vocab?.lifetime),
         daily: parsed.vocab?.daily ?? {},
@@ -53,6 +59,7 @@ function loadStoredStats() {
   } catch {
     return {
       conjugation: emptyModeStats(),
+      reflexive: emptyModeStats(),
       vocab: emptyModeStats(),
     };
   }
@@ -148,5 +155,6 @@ export function resetModeStats(mode) {
 export function clearAllStats() {
   localStorage.removeItem(STATS_KEY);
   sessionStats.conjugation = { ...EMPTY_COUNTS };
+  sessionStats.reflexive = { ...EMPTY_COUNTS };
   sessionStats.vocab = { ...EMPTY_COUNTS };
 }

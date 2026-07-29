@@ -7,6 +7,7 @@ import {
 } from "./verb-frequency.js";
 import { getVerbTypeBadge } from "./verb-type-info.js";
 import { escapeHtml, getFileProtocolHint } from "./ui-helpers.js";
+import { initSmartBackLink } from "./navigation.js";
 
 const searchInput = document.getElementById("verb-search");
 const listEl = document.getElementById("verb-list");
@@ -17,6 +18,19 @@ const detailClose = document.getElementById("verb-detail-close");
 
 let verbs = [];
 let verbDetailModal = null;
+let activeFilter = "all";
+
+function matchesFilter(verb) {
+  if (activeFilter === "reflexive") {
+    return verb.is_reflexive === true;
+  }
+
+  if (activeFilter === "non-reflexive") {
+    return !verb.is_reflexive;
+  }
+
+  return true;
+}
 
 function hasPresentConjugation(verb) {
   const tense = verb.present_tense;
@@ -44,6 +58,7 @@ function renderVerbList(query = "") {
   for (const tier of VERB_FREQUENCY_ORDER) {
     const tierVerbs = verbs
       .filter((verb) => getVerbFrequency(verb) === tier)
+      .filter((verb) => matchesFilter(verb))
       .filter((verb) => matchesSearch(verb, normalizedQuery))
       .sort((a, b) => a.infinitive.localeCompare(b.infinitive, "es"));
 
@@ -74,6 +89,11 @@ function renderVerbList(query = "") {
         <span class="verb-list-tags">
           <span class="type-tag type-tag-compact">${escapeHtml(badge.label)}</span>
           ${
+            verb.is_reflexive
+              ? '<span class="type-tag type-tag-compact type-tag-reflexive">reflexive</span>'
+              : ""
+          }
+          ${
             complete
               ? ""
               : '<span class="verb-list-incomplete">incomplete table</span>'
@@ -86,10 +106,33 @@ function renderVerbList(query = "") {
     listEl.appendChild(grid);
   }
 
+  const totalReflexive = verbs.filter((verb) => verb.is_reflexive).length;
+  const filterLabel =
+    activeFilter === "reflexive"
+      ? "reflexive"
+      : activeFilter === "non-reflexive"
+        ? "non-reflexive"
+        : "total";
+
   statusEl.textContent =
     visibleCount === 0
       ? "No verbs match your search."
-      : `${visibleCount} verb${visibleCount === 1 ? "" : "s"} shown`;
+      : `${visibleCount} ${filterLabel} verb${visibleCount === 1 ? "" : "s"} shown` +
+        (activeFilter === "all"
+          ? ` (${totalReflexive} reflexive · ${verbs.length - totalReflexive} non-reflexive)`
+          : "");
+}
+
+function setActiveFilter(filter) {
+  activeFilter = filter;
+
+  for (const tab of document.querySelectorAll(".filter-tab")) {
+    const isActive = tab.dataset.filter === filter;
+    tab.classList.toggle("is-active", isActive);
+    tab.setAttribute("aria-selected", isActive ? "true" : "false");
+  }
+
+  renderVerbList(searchInput.value);
 }
 
 function openVerbByInfinitive(infinitive) {
@@ -100,6 +143,11 @@ function openVerbByInfinitive(infinitive) {
 }
 
 async function init() {
+  initSmartBackLink(document.getElementById("back-link"), {
+    fallbackHref: "index.html",
+    fallbackLabel: "← Home",
+  });
+
   try {
     verbDetailModal = initVerbDetailModal({
       modalEl: detailModal,
@@ -122,6 +170,12 @@ async function init() {
       }
       openVerbByInfinitive(item.dataset.infinitive);
     });
+
+    for (const tab of document.querySelectorAll(".filter-tab")) {
+      tab.addEventListener("click", () => {
+        setActiveFilter(tab.dataset.filter);
+      });
+    }
   } catch (error) {
     statusEl.textContent = `Failed to load verbs: ${error.message}.${getFileProtocolHint()}`;
     statusEl.classList.add("error");
