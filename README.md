@@ -1,5 +1,7 @@
 # Rioplatense Practice
 
+**Live app:** [yokamin.github.io/rioplatense-app](https://yokamin.github.io/rioplatense-app/)
+
 A **personal side project** built alongside my own Spanish learning — not a complete course or dictionary. Content grows as my classes and exam prep do: verb lists, vocab themes, and exam snapshots reflect what *I* am working on at the time, with some Rioplatense-specific choices baked in. Anyone is welcome to use it, fork it, or adapt the data — but the defaults and scope are tailored to my progression, not to “all of Spanish.”
 
 A mobile-first web app for reviewing **Rioplatense Spanish** — verb conjugations, vocabulary, and grammar patterns — with *vos* as the active “you” form and standard *tú* / *vosotros* kept for recognition.
